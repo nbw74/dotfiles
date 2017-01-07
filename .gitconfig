@@ -1,0 +1,20 @@
+[user]
+	name = Nbw
+	email = nbw@inside.webmechanic.ru
+[merge]
+	tool = vimdiff
+[push]
+	default = matching
+[diff]
+	tool = vimdiff
+[difftool]
+	prompt = false
+[alias]
+	d = difftool
+	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+	co = checkout
+	ci = commit
+	st = status
+	br = branch
+[core]
+	quotepath = false
