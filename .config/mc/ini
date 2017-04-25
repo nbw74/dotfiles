@@ -96,6 +96,10 @@ ignore_ftp_chattr_errors=true
 
 
 
+editor_drop_selection_on_copy=1
+editor_state_full_filename=0
+editor_stop_format_chars=-+*\\,.;:&>
+
 [Layout]
 message_visible=0
 keybar_visible=0
@@ -152,7 +156,7 @@ show_mini_info=true
 kilobyte_si=false
 mix_all_files=false
 show_backups=true
-show_dot_files=true
+show_dot_files=false
 fast_reload=false
 fast_reload_msg_shown=false
 mark_moves_down=true
@@ -165,6 +169,9 @@ filetype_mode=true
 permission_mode=true
 torben_fj_mode=false
 quick_search_mode=2
+
+panel_scroll_center=false
+select_flags=6
 
 [Panelize]
 Изменённые файлы под контролем git=git ls-files --modified
