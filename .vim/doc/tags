@@ -33,3 +33,10 @@ VimExplorer-tempmark	vimExplorer.txt	/*VimExplorer-tempmark*
 VimExplorer-todo	vimExplorer.txt	/*VimExplorer-todo*
 VimExplorer-treebrowse	vimExplorer.txt	/*VimExplorer-treebrowse*
 VimExplorer-treehotkey	vimExplorer.txt	/*VimExplorer-treehotkey*
+ansible	ansible.txt	/*ansible*
+ansible-configuration	ansible.txt	/*ansible-configuration*
+ansible-credits	ansible.txt	/*ansible-credits*
+ansible-detection	ansible.txt	/*ansible-detection*
+ansible-install	ansible.txt	/*ansible-install*
+ansible.txt	ansible.txt	/*ansible.txt*
+ansible.vim	ansible.txt	/*ansible.vim*
