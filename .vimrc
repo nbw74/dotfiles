@@ -173,7 +173,7 @@ set smartindent						" 'умныя' отступы
 " Настройки табуляции
 set tabstop=8
 set shiftwidth=4
-set softtabstop=8
+set softtabstop=4
 set noexpandtab
 
 set nowrap						" не переносить строки
