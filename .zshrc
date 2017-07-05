@@ -827,8 +827,8 @@ export GTK2_RC_FILES="$(pwd)/.gtkrc-2.0"
 # Ищем файл описания раскраски приглашения
 if [ -r /etc/bash.attr ]; then
     source /etc/bash.attr
-elif [ -r ~/.zclr ]; then
-    source ~/.zclr
+elif [ -r ~/.sh.attr ]; then
+    source ~/.sh.attr
 fi
 
 [ -z $PR_CODE ] && PR_CODE=${PR_BLACK}
