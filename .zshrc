@@ -846,7 +846,7 @@ if [[ -n $MC_SID || -n $ZSHRUN ]]; then
     SPROMPT=
 else
     PROMPT='%(?.${PR_RESET}.${PR_RED})%?${PR_RESET}:${PR_CODE}[${PR_ATTRIB}${PR_SRV_CODE}]\
-${PR_RESET}%(!.${PR_ROOT}.${PR_USER})%n${PR_RESET}@${PR_HOST}%m${PR_RESET}:${PR_BR_BLUE}%~\
+${PR_RESET}%(!.${PR_ROOT}.${PR_USER})%n${PR_RESET}@${PR_HOST}%M${PR_RESET}:${PR_BR_BLUE}%~\
 ${PR_RESET}%1(j.${PR_BR_RED}.)%#${PR_RESET} '
 #    RPROMPT='%y-%D{%H:%M:%S}'
     SPROMPT=' ${PR_UL}Товарищ!${PR_RESET} Исправить ${PR_UL}'%R$'${PR_RESET} на ${PR_BOLD}'%r$'${PR_RESET}? ([y]да [${PR_UL}n${PR_RESET}]нет [a]пошёл на хуй [e]сам исправлю) _ '

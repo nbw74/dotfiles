@@ -1,15 +1,15 @@
 ### PROMPT COLORS
 #
 # [Prefix] string color
-PR_CODE=${PR_WHITE}
+PR_CODE=${PR_BR_BLACK}
 # Username color (phy=GREEN, virt=CYAN)
 PR_USER=${PR_GREEN}
 # Root user color (phy=RED, virt=YELLOW)
-PR_ROOT=${PR_BR_RED}
+PR_ROOT=${PR_RED}
 # Hostname color (prod=RED, dev=GREEN, test=YELLOW, net=BLUE)
-PR_HOST=${PR_BR_GREEN}
+PR_HOST=${PR_BR_MAGENTA}
 
 ### PROMPT ATTRIBUTES
 #
-PR_ATTRIB=HV
-PR_SRV_CODE=UNKNOWN
+PR_ATTRIB=localhost
+PR_SRV_CODE=nbw
