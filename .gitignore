@@ -1,3 +1,4 @@
 .config/mc/panels.ini
 .zsh.git
 .vim/.netrwhist
+.vim/doc/tags
