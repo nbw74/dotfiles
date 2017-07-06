@@ -2359,6 +2359,9 @@ au BufNewFile,BufRead /etc/modprobe.*		call s:StarSetf('modconf')
 au BufNewFile,BufRead .mutt{ng,}rc*,*/.mutt{ng,}/mutt{ng,}rc*	call s:StarSetf('muttrc')
 au BufNewFile,BufRead mutt{ng,}rc*,Mutt{ng,}rc*		call s:StarSetf('muttrc')
 
+" Nginx configuration file
+au BufRead,BufNewFile /etc/nginx/*,/usr/local/nginx/conf/* if &ft == '' | setfiletype nginx | endif
+
 " Nroff macros
 au BufNewFile,BufRead tmac.*			call s:StarSetf('nroff')
 
@@ -2443,3 +2446,4 @@ endfunc
 " Restore 'cpoptions'
 let &cpo = s:cpo_save
 unlet s:cpo_save
+
