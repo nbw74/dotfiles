@@ -825,10 +825,10 @@ export GREP_COLOR='1;32'
 export GTK2_RC_FILES="$(pwd)/.gtkrc-2.0"
 
 # Ищем файл описания раскраски приглашения
-if [ -r /etc/bash.attr ]; then
-    source /etc/bash.attr
-elif [ -r ~/.sh.attr ]; then
-    source ~/.sh.attr
+if [[ -r "/etc/bash.attr" ]]; then
+    source "/etc/bash.attr"
+elif [[ -r "$HOME/.prompt.attr" ]]; then
+    source "$HOME/.prompt.attr"
 fi
 
 [ -z $PR_CODE ] && PR_CODE=${PR_BLACK}
