@@ -55,8 +55,8 @@ export EDITOR=vim
 export VISUAL=vim
 export PAGER=less
 
-export LANG=ru_RU.UTF-8
-export LC_ALL=ru_RU.UTF-8
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 
 # History options
 HISTFILE=~/.zhistory
