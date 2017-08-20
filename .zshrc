@@ -60,10 +60,10 @@ export LC_ALL=en_US.UTF-8
 
 # History options
 HISTFILE=~/.zhistory
-HISTSIZE=5120
-SAVEHIST=5120
+HISTSIZE=20000
+SAVEHIST=20000
 
-if [ -f /etc/DIR_COLORS ]
+if [[ -f "/etc/DIR_COLORS" ]]
 then
     eval $(dircolors -b /etc/DIR_COLORS)
 else
@@ -112,7 +112,8 @@ mi="  ${GREEN}[${BR_GREEN}*${GREEN}]${CRESET}"		# info
 mx="  ${YELLOW}[${BR_YELLOW}i${YELLOW}]${CRESET}"	# process
 mw="  ${RED}[${BR_RED}!${RED}]${CRESET}"		# warning
 
-if [ -x /usr/bin/ccze ]; then
+if [[ -x "/usr/bin/ccze" ]]
+then
     CCZE='|ccze -A'
 fi
 
@@ -323,18 +324,11 @@ if [[ -r /etc/redhat-release ]] ; then
     fi
 fi
 #
-alias 1='cd -'
-alias 2='cd -2'
-alias 3='cd -3'
-alias 4='cd -4'
-alias 5='cd -5'
-alias 6='cd -6'
-alias 7='cd -7'
-alias 8='cd -8'
-alias 9='cd -9'
-alias 10='cd -10'
-alias 11='cd -11'
-alias 12='cd -12'
+local -i a=0
+for a in {1..20}
+do
+    alias $a="cd -$a"
+done
 
 local lsgdf=""
 if [[ -r /etc/redhat-release ]]; then
@@ -346,7 +340,7 @@ else
 fi
 alias ls="ls -C --color=always --classify --size -k --human-readable $lsgdf"
 # ls -l с цифровым видом прав
-alias lls="ls -l | sed -e 's/--x/1/g' -e 's/-w-/2/g' -e 's/-wx/3/g' -e 's/r--/4/g'  -e 's/r-x/5/g' -e 's/rw-/6/g' -e 's/rwx/7/g' -e 's/---/0/g'"
+alias lsd="ls -l | sed -e 's/--x/1/g' -e 's/-w-/2/g' -e 's/-wx/3/g' -e 's/r--/4/g'  -e 's/r-x/5/g' -e 's/rw-/6/g' -e 's/rwx/7/g' -e 's/---/0/g'"
 alias tree='tree -aFqC'
 #g#a2# Remove current empty directory. Execute \kbd{cd ..; rmdir \$OLDCWD}
 alias rmcdir='cd ..; rmdir $OLDPWD || cd $OLDPWD'
@@ -583,17 +577,6 @@ typeset -U path cdpath fpath manpath
 # setenv() { typeset -x "${1}${1:+=}${(@)argv[2,$#]}" }  # csh compatibility
 # freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
 
-knock() {
-    emulate -L zsh
-    KHOST=$1
-    shift
-    for d in $*
-    do
-           (( d = d - 28 ))
-           ping -a -c 1 -s $d $KHOST
-    done
-}
-
 # Шифрование каталога через openssl со сжатием
 aesg() {
     tar -cf - "${@}" | gzip - | openssl aes-128-cbc -salt -out ${1}.tar.gz.aes
@@ -698,7 +681,7 @@ EOT
     return $result
 }
 # вызывается при изменении рабочего каталога
-chpwd() {pwd; ls;}
+chpwd() { pwd; ls; }
 #g#f5# Create Directoy and \kbd{cd} to it
 mkcd() {
     if (( ARGC != 1 )); then
@@ -729,10 +712,10 @@ name() {
 #
 src() {
     autoload -U zrecompile;
-    [ -f ~/.zshrc ] && zrecompile -p ~/.zshrc;
-    [ -f ~/.zcompdump ] && zrecompile -p ~/.zcompdump;
-    [ -f ~/.zshrc.zwc.old ] && rm -f ~/.zshrc.zwc.old;
-    [ -f ~/.zcompdump.zwc.old ] && rm -f ~/.zcompdump.zwc.old;
+    [[ -f "~/.zshrc" ]] && zrecompile -p ~/.zshrc;
+    [[ -f "~/.zcompdump" ]] && zrecompile -p ~/.zcompdump;
+    [[ -f "~/.zshrc.zwc.old" ]] && rm -f ~/.zshrc.zwc.old;
+    [[ -f "~/.zcompdump.zwc.old" ]] && rm -f ~/.zcompdump.zwc.old;
     source ~/.zshrc;
 }
 #g#
@@ -819,7 +802,7 @@ whatwhen()  {
     esac
 }
 
-[ -f $BC_FILE ] && export BC_ENV_ARGS="-ql $BC_FILE"
+[[ -f "$BC_FILE" ]] && export BC_ENV_ARGS="-ql $BC_FILE"
 export LESS='-iMR -j5'
 export GREP_COLOR='1;32'
 export GTK2_RC_FILES="$(pwd)/.gtkrc-2.0"
