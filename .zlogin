@@ -26,7 +26,7 @@ export EDITOR=vim
 export PAGER=less
 export BROWSER=firefox
 
-case $(hostname -f) in
+case $(uname -n) in
     nestor.luna.webmechanic.ru) eval $(keychain --eval id_dsa id_rsa)
         ;;
     admin1.inside.webmechanic.ru) eval $(keychain --eval id_dsa)
@@ -35,6 +35,8 @@ case $(hostname -f) in
         ;;
     fe04.inside.webmechanic.ru) eval $(keychain --eval id_rsa_fe04)
         ;;
+    vs88.southbridge.ru) eval $(keychain --eval id_rsa)
+	;;
     *) true
 esac
 
