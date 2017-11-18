@@ -127,7 +127,8 @@ endif
 " tmux compatibility (http://stackoverflow.com/questions/6427650/vim-in-tmux-background-color-changes-when-paging)
 set t_ut=
 " For Ansible YAML syntax plugin
-let g:ansible_options = {'ignore_blank_lines': 0}
+" let g:ansible_options = {'ignore_blank_lines': 0}
+let g:ansible_unindent_after_newline = 1
 
 " Кусок с modelines предотвращает некоторые дыры в безопасности, имеющие отношение к modelines в файлах.
 " set modeline=0

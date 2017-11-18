@@ -1,12 +1,31 @@
-source <sfile>:p:h/include/yaml.vim
+" Vim syntax file
+" Language: Ansible hosts files
+" Maintainer: Dave Honneffer <pearofducks@gmail.com>
+" Last Change: 2015.09.23
 
+if exists("b:current_syntax")
+  finish
+endif
 
-syn keyword booleanStuff    true True TRUE false False FALSE yes Yes YES no No NO on On ON off Off OFF
-syn match userVariable '\w*='
-syn match ansibleVars 'ansible_\w*='
-syn match hostBlocks '\[.*\]'
+syn case ignore
+syn match hostsFirstWord      "\v^\S+"
+syn match hostsAttributes     "\v\S*\="
+syn region hostsHeader        start="\v^\s*\[" end="\v\]"
+syn keyword hostsHeaderSpecials children vars containedin=hostsHeader contained
+syn match  hostsComment       "\v^[#;].*$"
 
-hi def link ansibleVars     Type
-hi def link hostBlocks      Operator
-hi def link userVariable    Statement
-hi def link booleanStuff    Boolean
+highlight link hostsFirstWord        Label
+highlight link hostsHeader           Define
+highlight link hostsComment          Comment
+highlight link hostsHeaderSpecials   Identifier
+highlight link hostsAttributes       Structure
+
+if exists("g:ansible_attribute_highlight")
+  if g:ansible_attribute_highlight =~ 'n'
+    highlight link hostsAttributes NONE
+  elseif g:ansible_attribute_highlight =~ 'd'
+    highlight link hostsAttributes Comment
+  endif
+endif
+
+let b:current_syntax = "ansible_hosts"

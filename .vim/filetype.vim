@@ -2248,9 +2248,6 @@ func! s:FTy()
 endfunc
 
 
-" Yaml
-au BufNewFile,BufRead *.yaml,*.yml		setf yaml
-
 " Zope
 "   dtml (zope dynamic template markup language), pt (zope page template),
 "   cpt (zope form controller page template)
