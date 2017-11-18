@@ -29,7 +29,7 @@ export BROWSER=firefox
 case $(hostname -f) in
     nestor.luna.webmechanic.ru) eval $(keychain --eval id_dsa id_rsa)
         ;;
-    admin1.inside.webmechanic.ru) eval $(keychain --eval id_dsa)
+    admin1.inside.webmechanic.ru) eval $(keychain --eval id_dsa id_rsa)
         ;;
     ad0t.inside.webmechanic.ru) eval $(keychain --eval id_rsa_kino)
         ;;
