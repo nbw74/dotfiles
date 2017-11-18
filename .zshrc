@@ -1,6 +1,6 @@
 #
 # Zsh configuration file
-# Generated and adopted for WM by nbw 2007-2013
+# Generated and adopted for WM by nbw 2007-2017
 #
 # Tags:
 # g: grml.org zsh settings
@@ -49,7 +49,7 @@ else
 fi
 
 # misc files
-BC_FILE=~/.bc.extensions
+# BC_FILE=~/.bc.extensions
 
 export EDITOR=vim
 export VISUAL=vim
@@ -108,60 +108,17 @@ PR_BOLD="%{$bold_color%}"
 PR_UL="%{$underline_color%}"
 PR_RESET="%{$reset_color%}"
 
-mi="  ${GREEN}[${BR_GREEN}*${GREEN}]${CRESET}"		# info
-mx="  ${YELLOW}[${BR_YELLOW}i${YELLOW}]${CRESET}"	# process
-mw="  ${RED}[${BR_RED}!${RED}]${CRESET}"		# warning
-
 if [[ -x "/usr/bin/ccze" ]]
 then
     CCZE='|ccze -A'
 fi
 
+typeset -i redhat_distribution_major_version=0
 
-#g# check for version/system
-# check for versions (compatibility reasons)
-is4(){
-    [[ $ZSH_VERSION == <4->* ]] && return 0
-    return 1
-}
+if [[ -r /etc/redhat-release ]]; then
+    redhat_distribution_major_version=$(awk '{ match($0,"[.0-9]+",a) } END { print int(a[0]) }' /etc/redhat-release)
+fi
 
-is41(){
-    [[ $ZSH_VERSION == 4.<1->* || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
-is42(){
-    [[ $ZSH_VERSION == 4.<2->* || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
-is425(){
-    [[ $ZSH_VERSION == 4.2.<5->* || $ZSH_VERSION == 4.<3->* || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
-is43(){
-    [[ $ZSH_VERSION == 4.<3->* || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
-is433(){
-    [[ $ZSH_VERSION == 4.3.<3->* || $ZSH_VERSION == 4.<4->* \
-                                 || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
-is437(){
-    [[ $ZSH_VERSION == 4.3.<7->* || $ZSH_VERSION == 4.<4->* \
-                                 || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
-
-is439(){
-    [[ $ZSH_VERSION == 4.3.<9->* || $ZSH_VERSION == 4.<4->* \
-                                 || $ZSH_VERSION == <5->* ]] && return 0
-    return 1
-}
 #g#
 GRML_OSTYPE=$(uname -s)
 
@@ -169,62 +126,8 @@ islinux(){
     [[ $GRML_OSTYPE == "Linux" ]]
 }
 
-isdarwin(){
-    [[ $GRML_OSTYPE == "Darwin" ]]
-}
-
 isfreebsd(){
     [[ $GRML_OSTYPE == "FreeBSD" ]]
-}
-
-isopenbsd(){
-    [[ $GRML_OSTYPE == "OpenBSD" ]]
-}
-
-#g# utility functions
-# this function checks if a command exists and returns either true
-# or false. This avoids using 'which' and 'whence', which will
-# avoid problems with aliases for which on certain weird systems. :-)
-# Usage: check_com [-c|-g] word
-#   -c  only checks for external commands
-#   -g  does the usual tests and also checks for global aliases
-check_com() {
-    emulate -L zsh
-    local -i comonly gatoo
-
-    if [[ $1 == '-c' ]] ; then
-        (( comonly = 1 ))
-        shift
-    elif [[ $1 == '-g' ]] ; then
-        (( gatoo = 1 ))
-    else
-        (( comonly = 0 ))
-        (( gatoo = 0 ))
-    fi
-
-    if (( ${#argv} != 1 )) ; then
-        printf 'usage: check_com [-c] <command>\n' >&2
-        return 1
-    fi
-
-    if (( comonly > 0 )) ; then
-        [[ -n ${commands[$1]}  ]] && return 0
-        return 1
-    fi
-
-    if   [[ -n ${commands[$1]}    ]] \
-      || [[ -n ${functions[$1]}   ]] \
-      || [[ -n ${aliases[$1]}     ]] \
-      || [[ -n ${reswords[(r)$1]} ]] ; then
-
-        return 0
-    fi
-
-    if (( gatoo > 0 )) && [[ -n ${galiases[$1]} ]] ; then
-        return 0
-    fi
-
-    return 1
 }
 
 #g# creates an alias and precedes the command with
@@ -267,13 +170,8 @@ salias() {
     return 0
 }
 # Set up aliases
-alias :access="sudo tail -n 32 -f /var/log/squid/access.log${CCZE}"
-alias :cache="sudo tail -n 32 -f /var/log/squid/cache.log${CCZE}"
-alias :syslog="sudo tail -f -n 32 /var/log/syslog${CCZE}"
-alias :messages="sudo tail -f -n 32 /var/log/messages${CCZE}"
-
-alias cp='nocorrect cp'		# no spelling correction on cp
-alias mv='nocorrect mv'		# no spelling correction on mv
+alias cp='nocorrect cp'			# no spelling correction on cp
+alias mv='nocorrect mv'			# no spelling correction on mv
 alias mkdir='nocorrect mkdir'		# no spelling correction on mkdir
 alias j=jobs
 alias d='dirs -v'
@@ -282,46 +180,24 @@ alias h=history
 alias mdstat='cat /proc/mdstat'
 alias ...='cd ../../'
 alias ....='cd ../../../'
-#g# debian stuff
-if [[ -r /etc/debian_version ]] ; then
-    #a3# Execute \kbd{apt-cache search}
-    alias acs='apt-cache search'
-    #a3# Execute \kbd{apt-cache show}
-    alias acsh='apt-cache show'
-    #a3# Execute \kbd{apt-cache policy}
-    alias acp='apt-cache policy'
-    #a3# Execute \kbd{apt-get install}
-    salias agi="apt-get install"
-    #a3# Execute \kbd{aptitude install}
-    salias ati="aptitude install"
-    #a3# Execute \kbd{apt-get update}
-    salias au="apt-get update"
-    #a3# Execute \kbd{apt-get upgrade}
-    salias ag="apt-get upgrade"
-    #a3# Execute \kbd{aptitude update ; aptitude safe-upgrade}
-    salias -a up="apt-get update; apt-get upgrade"
-fi
-#g# sort installed Debian-packages by size
-if check_com -c dpkg-query ; then
-    #a3# List installed Debian-packages sorted by size
-    alias debs-by-size="dpkg-query -Wf 'x \${Installed-Size} \${Package} \${Status}\n' | sed -ne '/^x  /d' -e '/^x \(.*\) install ok installed$/s//\1/p' | sort -n"
-fi
-if [[ -r /etc/redhat-release ]] ; then
-# Fedora >= 21
-    if (( $(awk '{ print $3 }' /etc/redhat-release) >= 21 )); then
-        salias ds="dnf search"
-        salias di="dnf install"
-        salias de="dnf erase"
-        salias up="dnf upgrade"
-    else
-        salias ys="yum search"
-        salias yi="yum install"
-        salias yli="yum localinstall"
-        salias ylin="yum localinstall --nogpgcheck"
-        salias ye="yum erase"
-        salias up="yum upgrade"
-        salias ups="yum --security upgrade"
-    fi
+
+if (( redhat_distribution_major_version >= 21 )); then
+    salias ds="dnf search"
+    salias di="dnf install"
+    salias de="dnf erase"
+    salias up="dnf upgrade"
+    # Fallback
+    salias ys="dnf search"
+    salias yi="dnf install"
+    salias ye="dnf erase"
+elif (( redhat_distribution_major_version > 0 )); then
+    salias ys="yum search"
+    salias yi="yum install"
+    salias yli="yum localinstall"
+    salias ylin="yum localinstall --nogpgcheck"
+    salias ye="yum erase"
+    salias up="yum upgrade"
+    salias ups="yum --security upgrade"
 fi
 #
 local -i a=0
@@ -329,16 +205,16 @@ for a in {1..20}
 do
     alias $a="cd -$a"
 done
-
-local lsgdf=""
-if [[ -r /etc/redhat-release ]]; then
-    if (( $(awk '{ print $3 }' /etc/redhat-release) >= 6 )); then
-        lsgdf="--group-directories-first"
-    fi
-else
-    lsgdf="--group-directories-first"
+unset a
+#
+local lsgdf="--group-directories-first"
+# fallback if old RHEL
+if (( redhat_distribution_major_version <= 5 )); then
+    lsgdf=""
 fi
+
 alias ls="ls -C --color=always --classify --size -k --human-readable $lsgdf"
+unset lsgdf
 # ls -l с цифровым видом прав
 alias lsd="ls -l | sed -e 's/--x/1/g' -e 's/-w-/2/g' -e 's/-wx/3/g' -e 's/r--/4/g'  -e 's/r-x/5/g' -e 's/rw-/6/g' -e 's/rwx/7/g' -e 's/---/0/g'"
 alias tree='tree -aFqC'
@@ -356,7 +232,7 @@ else
     local ping_interval=2
 fi
 alias ping="LC_ALL=en_US.UTF-8 ping -i0.${ping_interval} -W1 -c5"
-
+unset ping_interval
 # Global aliases -- These do not have to be at the beginning of the command line.
 alias -g L='|&less'
 alias -g C='|&ccze -A'
@@ -467,11 +343,11 @@ zmodload -a zsh/zpty zpty
 zmodload -a zsh/zprof zprof
 zmodload -ap zsh/mapfile mapfile
 ## менюобразная подсветка вариантов окончаний 
-#  zmodload zsh/complist
-# zmodload zsh/regex
+zmodload zsh/complist
+zmodload zsh/regex
 
-bindkey -e                 # emacs key bindings
-bindkey ' ' magic-space    # also do history expansion on space
+# bindkey -e                 # emacs key bindings
+# bindkey ' ' magic-space    # also do history expansion on space
 
 # Bindings from Fedorchuck
 bindkey "^[[2~" yank
@@ -543,25 +419,6 @@ zstyle ':completion:*:processes-names' command 'ps xho command'
 ## add colors to processes for kill completion
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;32'
 
-# host completion
-if is42 ; then
-    [[ -r ~/.ssh/known_hosts ]] && _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_hosts=()
-    [[ -r /etc/hosts ]] && : ${(A)_etc_hosts:=${(s: :)${(ps:\t:)${${(f)~~"$(</etc/hosts)"}%%\#*}##[:blank:]#[^[:blank:]]#}}} || _etc_hosts=()
-else
-    _ssh_hosts=()
-    _etc_hosts=()
-fi
-hosts=(
-    $(hostname)
-    "$_ssh_hosts[@]"
-    "$_etc_hosts[@]"
-    localhost
-)
-zstyle ':completion:*:hosts' hosts $hosts
-#g# TODO: so, why is this here?
-# command for process lists, the local web server details and host completion
-## zstyle '*' hosts $hosts
-
 # Filename suffixes to ignore during completion (except after rm command)
 #zstyle ':completion:*:*:(^rm):*:*files' ignored-patterns '*?.o' '*?.c~' \
 #    '*?.old' '*?.pro'
@@ -573,9 +430,6 @@ zstyle ':completion:*:hosts' hosts $hosts
 
 # automatically remove duplicates from these arrays
 typeset -U path cdpath fpath manpath
-
-# setenv() { typeset -x "${1}${1:+=}${(@)argv[2,$#]}" }  # csh compatibility
-# freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
 
 # Шифрование каталога через openssl со сжатием
 aesg() {
@@ -805,7 +659,6 @@ whatwhen()  {
 [[ -f "$BC_FILE" ]] && export BC_ENV_ARGS="-ql $BC_FILE"
 export LESS='-iMR -j5'
 export GREP_COLOR='1;32'
-export GTK2_RC_FILES="$(pwd)/.gtkrc-2.0"
 
 # Ищем файл описания раскраски приглашения
 if [[ -r "/etc/bash.attr" ]]; then
@@ -823,7 +676,7 @@ fi
 [ -z $PR_ATTRIB ] && PR_ATTRIB=UNDEF
 [ -z $PR_SRV_CODE ] || PR_SRV_CODE=-$PR_SRV_CODE
 
-if [[ -n $MC_SID || -n $ZSHRUN ]]; then
+if [[ -n $MC_SID ]]; then
     PROMPT='${PR_BR_BLUE}%~${PR_RESET}> '
     RPROMPT=
     SPROMPT=
@@ -833,19 +686,6 @@ else
 ${PR_RESET}%1(j.${PR_BR_RED}.)%#${PR_RESET} '
     RPROMPT=
     SPROMPT=' ${PR_UL}Товарищ!${PR_RESET} Исправить ${PR_UL}'%R$'${PR_RESET} на ${PR_BOLD}'%r$'${PR_RESET}? ([y]да [${PR_UL}n${PR_RESET}]нет [a]пошёл на хуй [e]сам исправлю) _ '
-fi
-
-if [[ -n "$ZSHRUN" ]]; then
-    function _accept_and_quit() {
-        zsh -c "${BUFFER}" &|
-    exit
-    }
-    zle -N _accept_and_quit
-    bindkey "^M" _accept_and_quit
-
-    unfunction precmd
-    unset ZSHRUN
-    HISTFILE=~/.zrunhistory
 fi
 
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
