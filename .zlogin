@@ -3,9 +3,6 @@
 #
 
 uptime
-echo
-df -h 2>/dev/null|grep '\/$\|\/var$\|\/usr$\|\/tmp$\|\/boot$';
-echo
 
 ### RAID STATUS
 #
@@ -26,17 +23,20 @@ export EDITOR=vim
 export PAGER=less
 export BROWSER=firefox
 
-case $(uname -n) in
-    nestor.luna.webmechanic.ru) eval $(keychain --eval id_dsa id_rsa)
+nodename=$(uname -n)
+
+case ${nodename%%\.*} in
+    nestor) eval $(keychain --eval id_dsa id_rsa)
         ;;
-    admin1.inside.webmechanic.ru) eval $(keychain --eval id_dsa id_rsa)
+    admin1) eval $(keychain --eval id_dsa id_rsa)
         ;;
-    ad0t.inside.webmechanic.ru) eval $(keychain --eval id_rsa_kino)
+    ad0t|kino) eval $(keychain --eval id_rsa_kino)
         ;;
-    fe04.inside.webmechanic.ru) eval $(keychain --eval id_rsa_fe04)
+    fe04) eval $(keychain --eval id_rsa_fe04)
         ;;
-    vs88.southbridge.ru) eval $(keychain --eval id_rsa)
+    vs88|mtdi-zabbix-proxy) eval $(keychain --eval id_rsa)
 	;;
     *) true
 esac
 
+unset nodename
