@@ -1,27 +1,20 @@
-#
-# setxkbmap -layout "us,ru" -variant "winkeys" -option "grp:ctrl_shift_toggle"
-#
 
 uptime
 
-### RAID STATUS
-#
-MDSTAT="/proc/mdstat"
-
-GREP_COLOR='1;31';
-if grep -P -B1 '(U_|_U)' $MDSTAT 2>/dev/null
+if grep -Pq '(U_|_U)' "/proc/mdstat" 2>/dev/null
 then
-    echo "--"
+    echo -e '\e[1;31m* DEGRADED MDRAID DETECTED!\e[0m'
 fi
-
-GREP_COLOR='1;34';
-grep -F -B1 'UU' $MDSTAT 2>/dev/null
-# echo
 
 export VISUAL=vim
 export EDITOR=vim
 export PAGER=less
 export BROWSER=firefox
+
+if hash kubectl 2>/dev/null
+then
+    source <(kubectl completion zsh)
+fi
 
 nodename=$(uname -n)
 
