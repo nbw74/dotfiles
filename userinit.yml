@@ -14,7 +14,7 @@
     - name: User
       user:
         name: "{{ username }}"
-        password: "{{ password }}|default('$6$Y.LDrxWV$auqKxSczZHRpT//DpZ2PAEi7G7gWodmmQJCj7WS060REkqRzSN.Lxn5cENZl7lsGuCquX9TgqVj/JrXQ75HS2/')"
+        password: "{{ password|default('$6$Y.LDrxWV$auqKxSczZHRpT//DpZ2PAEi7G7gWodmmQJCj7WS060REkqRzSN.Lxn5cENZl7lsGuCquX9TgqVj/JrXQ75HS2/') }}"
         groups: wheel
         append: yes
 
