@@ -1,0 +1,156 @@
+---
+- name: DOTFILES 
+  hosts: all
+  become: no
+  vars:
+    username: "nbw"
+    repo: "git://git.webmechanic.ru/dotfiles"
+    prompt_file: .prompt.attr
+
+  tasks:
+    - name: Install packages
+      become: yes
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - zsh
+        - vim
+        - tree
+        - git
+        - libselinux-python
+      when: ansible_distribution == "CentOS"
+
+    - name: Sudoers (I)
+      become: yes
+      lineinfile:
+        path: "/etc/sudoers"
+        regexp: '^(Defaults\s+always_set_home)'
+        line: '# \1'
+        backrefs: yes
+
+    - name: Check if path exists
+      stat:
+        path: '/home/{{ username }}/.dotfiles'
+      register: check_path
+
+    - name: Git update
+      git:
+        repo: '{{ repo }}'
+        dest: '/home/{{ username }}/.dotfiles'
+        clone: no
+        update: yes
+        accept_hostkey: yes
+      when: check_path.stat.exists == true
+
+    - name: Git clone
+      git:
+        repo: '{{ repo }}'
+        dest: '/home/{{ username }}/.dotfiles'
+        clone: yes
+        accept_hostkey: yes
+      when: check_path.stat.exists == false
+      notify: touch zshrc
+
+    - meta: flush_handlers
+
+    - name: Attrib file (touch)
+      file:
+        state: touch
+        path: "/home/{{ username }}/{{ prompt_file }}"
+      changed_when: false
+
+    - name: Set prompt fact if host
+      set_fact:
+        prompt_color_user: 'GREEN'
+        prompt_color_root: 'RED'
+      when: ansible_virtualization_role == "host" or ansible_virtualization_role is undefined
+
+    - name: Set prompt fact if guest
+      set_fact:
+        prompt_color_user: 'CYAN'
+        prompt_color_root: 'YELLOW'
+      when: ansible_virtualization_role == "guest"
+
+    - name: Attrib file
+      blockinfile:
+        dest: "/home/{{ username }}/{{ prompt_file }}"
+        block: |
+          # Username color (phy=GREEN, virt=CYAN)
+          PR_USER=${PR_BR_{{ prompt_color_user }}}
+          # Root user color (phy=RED, virt=YELLOW)
+          PR_ROOT=${PR_BR_{{ prompt_color_root }}}
+          # Hostname color (prod=RED, dev=GREEN, test=YELLOW, net=BLUE, localhost=MAGENTA)
+          PR_HOST=${PR_BR_YELLOW}
+
+    - name: Check tmp dir
+      file:
+        state: directory
+        path: '/home/{{ username }}/.tmp'
+        owner: '{{ username }}'
+
+    - name: Create .viminfo
+      become: yes
+      file:
+        state: touch
+        path: '/home/{{ username }}/.viminfo'
+        owner: '{{ username }}'
+      changed_when: false
+
+    - name: Check user shell
+      become: yes
+      user:
+        name: "{{ username }}"
+        shell: "/bin/zsh"
+
+  handlers:
+    - name: touch zshrc
+      file:
+        path: "/home/{{ username }}/.zshrc"
+        state: touch
+      notify: remove dotconfigs
+
+    - name: remove dotconfigs
+      file:
+        path: '{{ item }}'
+        state: absent
+      with_items:
+        - .config/mc/ini
+        - .vim
+        - .zsh
+        - .gitconfig
+        - .tmux.conf
+        - .vimrc
+        - .zlogin
+        - .zlogout
+        - .zshrc
+      notify: create symlinks
+
+    - name: create symlinks
+      file:
+        src: '.dotfiles/{{ item }}'
+        path: '{{ item }}'
+        state: link
+      with_items:
+        - .vim
+        - .zsh
+        - .gitconfig
+        - .tmux.conf
+        - .vimrc
+        - .zlogin
+        - .zlogout
+        - .zshrc
+      notify: create MC config dir
+
+    - name: create MC config dir
+      file:
+        path: .config/mc
+        state: directory
+      notify: create MC ini symlink
+
+    - name: create MC ini symlink
+      file:
+        src: '../../.dotfiles/.config/mc/ini'
+        path: '.config/mc/ini'
+        state: link
+...

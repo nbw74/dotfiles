@@ -1,0 +1,47 @@
+---
+- name: USERINIT
+  hosts: all
+  become: no
+  vars:
+    username: "nbw"
+
+  tasks:
+    - name: packages
+      yum:
+        name: libselinux-python
+        state: latest
+
+    - name: User
+      user:
+        name: "{{ username }}"
+        groups: wheel
+        append: yes
+
+    - name: Key
+      authorized_key:
+        user: "{{ username }}"
+        state: present
+        key: "{{ lookup('file', '/home/{{ username }}/.ssh/id_rsa.pub') }}"
+
+    - name: SUDO_1
+      lineinfile:
+        path: "/etc/sudoers"
+        regexp: '^(Defaults\s+always_set_home)'
+        line: '# \1'
+        backrefs: yes
+
+    - name: SUDO_2
+      lineinfile:
+        path: "/etc/sudoers"
+        regexp: '(%wheel\s+ALL=\(ALL\)\s+ALL)'
+        line: '# \1'
+        backrefs: yes
+
+    - name: SUDO_3
+      lineinfile:
+        path: "/etc/sudoers"
+        regexp: '#.*(%wheel\s+ALL=\(ALL\)\s+NOPASSWD: ALL)'
+        line: '\1'
+        backrefs: yes
+
+...
