@@ -1,0 +1,23 @@
+---
+- name: DOTFILES UPDATE
+  hosts: all
+  become: no
+  vars:
+    username: "{{ ansible_user|default('nbw') }}"
+    repo: "git://git.webmechanic.ru/dotfiles"
+
+  tasks:
+    - name: Check if path exists
+      stat:
+        path: '/home/{{ username }}/.dotfiles'
+      register: check_path
+
+    - name: Git update
+      git:
+        repo: '{{ repo }}'
+        dest: '/home/{{ username }}/.dotfiles'
+        clone: no
+        update: yes
+        accept_hostkey: yes
+      when: check_path.stat.exists == true
+...
