@@ -346,15 +346,15 @@ zmodload -ap zsh/mapfile mapfile
 zmodload zsh/complist
 zmodload zsh/regex
 
-# bindkey -e                 # emacs key bindings
+bindkey -e                 # emacs key bindings
 # bindkey ' ' magic-space    # also do history expansion on space
 
 # Bindings from Fedorchuck
-bindkey "^[[2~" yank
-bindkey "^[[3~" delete-char
-bindkey "^[[7~" beginning-of-line
-bindkey "^[[8~" end-of-line
-bindkey "^[e" expand-cmd-path				## C-e for expanding path of typed command
+# bindkey "^[[2~" yank
+# bindkey "^[[3~" delete-char
+# bindkey "^[[7~" beginning-of-line
+# bindkey "^[[8~" end-of-line
+# bindkey "^[e" expand-cmd-path				## C-e for expanding path of typed command
 #t# bind history to up down keys
 autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
