@@ -77,8 +77,8 @@ endif " has("autocmd")
 " set t_Co=88
 if has("gui_running")
     colorscheme rootwater
-    set lines=32
-    set columns=106
+    set lines=38
+    set columns=160
     set guifont=DejaVu\ Sans\ Mono\ 10		" шрифт в гую
 " 	set guifont=Liberation\ Mono\ 8
     set guioptions=acegit				" гуйные flags
