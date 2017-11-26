@@ -76,9 +76,12 @@ endif " has("autocmd")
 
 " set t_Co=88
 if has("gui_running")
-    colorscheme rootwater
-    set lines=38
-    set columns=160
+    " nice schemes for GUI: 
+    "				Dark: darkblue, desert, inkpot, jellybeans, moria 
+    "				Bright: default, peachpuff, zellner
+    colorscheme desert
+    set lines=36
+    set columns=156
     set guifont=DejaVu\ Sans\ Mono\ 10		" шрифт в гую
 " 	set guifont=Liberation\ Mono\ 8
     set guioptions=acegit				" гуйные flags
