@@ -306,3 +306,6 @@ au! BufNewFile,BufRead .vimrc let csym="\""
 
 :nnoremap <A-a> <C-a>
 :nnoremap <A-x> <C-x>
+
+execute pathogen#infect()
+" EOF

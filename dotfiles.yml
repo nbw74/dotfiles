@@ -3,7 +3,7 @@
   hosts: all
   become: no
   vars:
-    username: "nbw"
+    username: "{{ ansible_user }}"
     repo: "git://git.webmechanic.ru/dotfiles"
     prompt_file: .prompt.attr
 

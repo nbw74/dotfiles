@@ -1,4 +1,8 @@
+*.retry
 .config/mc/panels.ini
 .zsh.git
 .vim/.netrwhist
 .vim/doc/tags
+.vim/bundle/*/.git
+.vim/bundle/*/.github
+.vim/bundle/*/.gitignore
