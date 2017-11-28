@@ -607,6 +607,15 @@ ssl-cert-info() {
     openssl x509 -noout -text -in $1
     ssl-cert-fingerprints $1
 }
+#
+ssl-web-info() {
+    emulate -L zsh
+    if [[ -z $1 ]] ; then
+        printf 'usage: ssl-web-info <file>\n'
+        return 1
+    fi
+    echo | openssl s_client -servername $1 -connect $1:443 2>/dev/null | openssl x509 -noout -issuer -subject -dates
+}
 
 #g#f2# Find history events by search pattern and list them by date.
 whatwhen()  {
