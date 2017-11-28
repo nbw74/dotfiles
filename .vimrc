@@ -3,7 +3,7 @@
 "
 " Encoding : UTF-8
 " System   : FreeBSD 6.2
-" Author   : Nebelwerfer
+" Author   : nbw
 
 " When started as "evim", evim.vim will already have done these settings.
 if v:progname =~? "evim"
@@ -86,15 +86,17 @@ if has("gui_running")
 " 	set guifont=Liberation\ Mono\ 8
     set guioptions=acegit				" гуйные flags
 else
-    if strftime("%H") < 10
-        colorscheme jellybeans
-    else
-        if strftime("%H") < 19
-            colo murphy
-        else
-            colorscheme jellybeans
-        endif
-    endif
+"     if strftime("%H") < 10
+"         colorscheme jellybeans
+"     else
+"         if strftime("%H") < 19
+"             colo murphy
+"         else
+"             colorscheme jellybeans
+"         endif
+"     endif
+    set background=dark    " Setting dark mode
+    colorscheme gruvbox
 endif
 
 " http://vim.wikia.com/wiki/Ignore_white_space_in_vimdiff
@@ -147,11 +149,9 @@ set encoding=utf-8					" текущая кодировка
 set termencoding=utf-8					" кодировка терминала
 set fileencodings=utf-8,cp1251,cp866,koi8-r		" возможные кодировки и последовательность определения
 
-" set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
 set keymap=russian-jcukenwin				" русская языка (второй способ)
 set iminsert=0						" --"--
 set imsearch=0						" --"--
-highlight lCursor guifg=NONE guibg=Red			" меняем цвет курсора при рус. раскладке
 
 set autoread
 set directory=~/.tmp
