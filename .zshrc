@@ -25,7 +25,7 @@ LOGCHECK=300                    # check every 5 min for login/logout activity
 WATCHFMT='%n %a %l from %m at %t.'
 
 # TERM
-if [[ -z "$SSH_TTY" && -z "$DISPLAY" && -z "$STY" && -z "$DESKTOP_SESSION" ]]; then
+if [[ $(tty) =~ /dev/tty[0-9]* ]]; then
     export TERM='linux'
 else
     local tmp_TERM
@@ -351,9 +351,9 @@ bindkey -e                 # emacs key bindings
 
 # Bindings from Fedorchuck
 # bindkey "^[[2~" yank
-# bindkey "^[[3~" delete-char
-# bindkey "^[[7~" beginning-of-line
-# bindkey "^[[8~" end-of-line
+bindkey "^[[3~" delete-char
+bindkey "^[[7~" beginning-of-line
+bindkey "^[[8~" end-of-line
 # bindkey "^[e" expand-cmd-path				## C-e for expanding path of typed command
 #t# bind history to up down keys
 autoload -U up-line-or-beginning-search
