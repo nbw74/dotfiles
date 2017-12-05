@@ -672,7 +672,9 @@ export GREP_COLOR='1;32'
 # Ищем файл описания раскраски приглашения
 if [[ -r "/etc/bash.attr" ]]; then
     source "/etc/bash.attr"
-elif [[ -r "$HOME/.prompt.attr" ]]; then
+fi
+
+if [[ -r "$HOME/.prompt.attr" ]]; then
     source "$HOME/.prompt.attr"
 fi
 
