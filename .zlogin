@@ -21,7 +21,7 @@ case ${nodename%%\.*} in
         ;;
     admin1) eval $(keychain --eval id_dsa id_rsa)
         ;;
-    kino) eval $(keychain --eval id_rsa_wm id_rsa_sb)
+    kino) eval $(keychain --eval id_rsa_wm id_ed25519)
         ;;
     fe04) eval $(keychain --eval id_rsa_fe04)
         ;;
