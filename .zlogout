@@ -1,4 +1,7 @@
-printf "Synchronizing disks... "
-sync
-printf "Synced.\n"
+#
+# Zsh logout configuration file
+#
 
+printf "sync... "
+sync
+printf "synced.\n"

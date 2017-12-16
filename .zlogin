@@ -1,3 +1,6 @@
+#
+# Zsh login configuration file
+#
 
 uptime
 
@@ -5,11 +8,6 @@ if grep -Pq '(U_|_U)' "/proc/mdstat" 2>/dev/null
 then
     echo -e '\e[1;31m* DEGRADED MDRAID DETECTED!\e[0m'
 fi
-
-export VISUAL=vim
-export EDITOR=vim
-export PAGER=less
-export BROWSER=firefox
 
 if hash kubectl 2>/dev/null
 then
