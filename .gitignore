@@ -2,3 +2,4 @@
 .config/mc/panels.ini
 .vim/.netrwhist
 .vim/doc/tags
+.vim/bundle
