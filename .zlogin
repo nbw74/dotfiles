@@ -23,7 +23,7 @@ case ${nodename%%\.*} in
         ;;
     kino) eval $(keychain --eval id_rsa_wm id_ed25519)
         ;;
-    fe04) eval $(keychain --eval id_rsa_fe04)
+    fe04) eval $(keychain --eval id_rsa_fe04 id_ed25519)
         ;;
     vs88|mtdi-zabbix-proxy) eval $(keychain --eval id_rsa)
 	;;
