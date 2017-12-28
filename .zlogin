@@ -17,16 +17,16 @@ fi
 nodename=$(uname -n)
 
 case ${nodename%%\.*} in
-    nestor) eval $(keychain --eval id_dsa id_rsa)
-        ;;
-    admin1) eval $(keychain --eval id_dsa id_rsa)
+    nestor|admin1) eval $(keychain --eval id_dsa id_rsa)
         ;;
     kino) eval $(keychain --eval id_rsa_wm id_ed25519)
         ;;
-    fe04) eval $(keychain --eval id_rsa_fe04)
+    fe04) eval $(keychain --eval id_rsa_fe04 id_ed25519)
         ;;
     vs88|mtdi-zabbix-proxy) eval $(keychain --eval id_rsa)
 	;;
+    knd-zbx-proxy) eval $(keychain --eval id_ed25519)
+        ;;
     *) true
 esac
 
