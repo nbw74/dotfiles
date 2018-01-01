@@ -17,17 +17,19 @@ fi
 nodename=$(uname -n)
 
 case ${nodename%%\.*} in
-    nestor|admin1) eval $(keychain --eval id_dsa id_rsa)
+    nestor|admin1) keylist="id_dsa id_rsa"
         ;;
-    kino) eval $(keychain --eval id_rsa_wm id_ed25519)
+    kino) keylist="id_rsa_wm id_ed25519"
         ;;
-    fe04) eval $(keychain --eval id_rsa_fe04 id_ed25519)
+    fe04) keylist="id_rsa_fe04 id_ed25519"
         ;;
-    vs88|mtdi-zabbix-proxy) eval $(keychain --eval id_rsa)
+    vs88|mtdi-zabbix-proxy) keylist="id_rsa"
 	;;
-    knd-zbx-proxy) eval $(keychain --eval id_ed25519)
+    knd-zbx-proxy) keylist="id_ed25519"
         ;;
     *) true
 esac
 
-unset nodename
+eval $(keychain --nogui --eval $keylist)
+
+unset nodename keylist
