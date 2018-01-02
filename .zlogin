@@ -16,7 +16,7 @@ fi
 
 local nodename=$(uname -n)
 local -i keyrun=1
-local -a keylist=()
+local -a keylist
 
 case ${nodename%%\.*} in
     nestor|admin1)
