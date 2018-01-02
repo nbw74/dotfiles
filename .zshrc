@@ -377,6 +377,21 @@ promptinit
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
 
+# VCS information
+# http://zsh.sourceforge.net/Doc/Release/User-Contributions.html#Version-Control-Information
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable git svn
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' get-revision true
+zstyle ':vcs_info:*' unstagedstr "✹"
+zstyle ':vcs_info:*' stagedstr "✚"
+zstyle ':vcs_info:git*' formats "${PR_BR_WHITE}%m${PR_BR_RED}%u${PR_BR_GREEN}%c ${PR_RESET}(${PR_WHITE}%b${PR_RESET})"
+zstyle ':vcs_info:git*' actionformats "${PR_BR_WHITE}%m${PR_BR_RED}%u${PR_BR_GREEN}%c ${PR_RESET}(${PR_WHITE}%b|${PR_BR_WHITE}%a${PR_RESET})"
+
+precmd () {
+    vcs_info
+}
+
 # Completion Styles
 
 # list of completers to use
@@ -695,7 +710,7 @@ else
     PROMPT='%(?.${PR_RESET}.${PR_RED})%?${PR_RESET} \
 %(!.${PR_ROOT}.${PR_USER})%n${PR_RESET}@${PR_HOST}%M${PR_RESET} ${PR_BR_BLUE}%2~\
 ${PR_RESET}%1(j.${PR_BR_RED}.)%#${PR_RESET} '
-    RPROMPT=
+    RPROMPT='${vcs_info_msg_0_}'
     SPROMPT=' ${PR_UL}Товарищ!${PR_RESET} Исправить ${PR_UL}'%R$'${PR_RESET} на ${PR_BOLD}'%r$'${PR_RESET}? ([y]да [${PR_UL}n${PR_RESET}]нет [a]пошёл на хуй [e]сам исправлю) _ '
 fi
 
