@@ -710,17 +710,17 @@ else
     PROMPT='%(?.${PR_RESET}.${PR_RED})%?${PR_RESET} \
 %(!.${PR_ROOT}.${PR_USER})%n${PR_RESET}@${PR_HOST}%M${PR_RESET} ${PR_BR_BLUE}%2~\
 ${PR_RESET}%1(j.${PR_BR_RED}.)%#${PR_RESET} '
-    RPROMPT='${vcs_info_msg_0_:-}'
+    RPROMPT='${vcs_info_msg_0_}'
     SPROMPT=' ${PR_UL}Товарищ!${PR_RESET} Исправить ${PR_UL}'%R$'${PR_RESET} на ${PR_BOLD}'%r$'${PR_RESET}? ([y]да [${PR_UL}n${PR_RESET}]нет [a]пошёл на хуй [e]сам исправлю) _ '
 fi
 
-source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
-ZSH_HIGHLIGHT_STYLES[path]='fg=none,underline'
-ZSH_HIGHLIGHT_PATTERNS+=('rm -rf *' 'fg=white,bold,bg=red')
-ZSH_HIGHLIGHT_PATTERNS+=('\*' 'fg=red,bold,bg=black')
-ZSH_HIGHLIGHT_PATTERNS+=('\|' 'fg=white,bold')
+# source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# 
+# ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
+# ZSH_HIGHLIGHT_STYLES[path]='fg=none,underline'
+# ZSH_HIGHLIGHT_PATTERNS+=('rm -rf *' 'fg=white,bold,bg=red')
+# ZSH_HIGHLIGHT_PATTERNS+=('\*' 'fg=red,bold,bg=black')
+# ZSH_HIGHLIGHT_PATTERNS+=('\|' 'fg=white,bold')
 # ZSH_HIGHLIGHT_PATTERNS+=('(group|host|hostgroup|hbacrule|hbacsvc|hbactest|krbtpolicy|passwd|pwpolicy|service|show|user)-' 'fg=white')
 #
 # source $HOME/.zsh/zsh-git-prompt/zshrc.sh
