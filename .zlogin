@@ -14,7 +14,9 @@ then
     source <(kubectl completion zsh)
 fi
 
-nodename=$(uname -n)
+local nodename=$(uname -n)
+local -i keyrun=1
+local -a keylist=()
 
 case ${nodename%%\.*} in
     nestor|admin1)
@@ -32,9 +34,12 @@ case ${nodename%%\.*} in
     knd-zbx-proxy)
 	keylist=( id_ed25519 )
         ;;
-    *) true
+    *)
+	keyrun=0
 esac
 
-eval $(keychain --nogui --eval ${keylist[*]})
+if (( keyrun )); then
+    eval $(keychain --nogui --eval ${keylist[*]})
+fi
 
-unset nodename keylist
+unset nodename keylist keyrun
