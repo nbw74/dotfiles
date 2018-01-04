@@ -218,6 +218,7 @@ unset lsgdf
 # ls -l с цифровым видом прав
 alias lsd="ls -l | sed -e 's/--x/1/g' -e 's/-w-/2/g' -e 's/-wx/3/g' -e 's/r--/4/g'  -e 's/r-x/5/g' -e 's/rw-/6/g' -e 's/rwx/7/g' -e 's/---/0/g'"
 alias tree='tree -aFqC'
+alias df='df -PTh'
 #g#a2# Remove current empty directory. Execute \kbd{cd ..; rmdir \$OLDCWD}
 alias rmcdir='cd ..; rmdir $OLDPWD || cd $OLDPWD'
 
