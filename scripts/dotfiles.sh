@@ -10,11 +10,26 @@ typeset -a base=( ".gitconfig" ".tmux.conf" ".vim" ".vimrc" ".zlogin" ".zlogout"
 typeset mcdir=".config/mc"
 typeset mcini="ini"
 typeset -a dirs=( ".tmp" $mcdir )
+typeset -a packages=( "zsh" "vim" "tree" )
 # CONFIGURATION END
 
 main() {
 
     trap 'except $LINENO' ERR
+
+    typeset -i redhat_distribution_major_version=0
+
+    if [[ -r /etc/redhat-release ]]; then
+        redhat_distribution_major_version=$(awk '{ match($0,"[.0-9]+",a) } END { print int(a[0]) }' /etc/redhat-release)
+    fi
+
+    if [[ ! -f /bin/zsh ]]; then
+        if (( redhat_distribution_major_version >= 21 )); then
+            sudo dnf install ${packages[*]}
+        elif (( redhat_distribution_major_version > 0 )); then
+            sudo yum install ${packages[*]}
+        fi
+    fi
 
     cd $HOME
 
@@ -34,6 +49,8 @@ main() {
     if [[ ! -h $mcini ]]; then
         ln -svf ../../.dotfiles/.config/mc/$mcini $mcini
     fi
+
+    touch .viminfo
 }
 
 except() {
