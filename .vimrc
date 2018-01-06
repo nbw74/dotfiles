@@ -91,8 +91,12 @@ else
 "             colorscheme jellybeans
 "         endif
 "     endif
-    set background=dark    " Setting dark mode
-    colorscheme gruvbox
+    if v:version > 720
+	set background=dark
+	colorscheme gruvbox
+    else
+	colorscheme murphy
+    endif
 endif
 
 " http://vim.wikia.com/wiki/Ignore_white_space_in_vimdiff
@@ -243,5 +247,7 @@ au! BufNewFile,BufRead .vimrc let csym="\""
 " gv	выделить заново
 " :ls	просмотреть текущие буферы
 
-execute pathogen#infect()
+if v:version > 720
+    execute pathogen#infect()
+endif
 " EOF
