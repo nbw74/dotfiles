@@ -91,7 +91,7 @@ else
 "             colorscheme jellybeans
 "         endif
 "     endif
-    if v:version > 720
+    if v:version > 702
 	set background=dark
 	colorscheme gruvbox
     else
@@ -247,7 +247,7 @@ au! BufNewFile,BufRead .vimrc let csym="\""
 " gv	выделить заново
 " :ls	просмотреть текущие буферы
 
-if v:version > 720
+if v:version > 702
     execute pathogen#infect()
 endif
 " EOF
