@@ -244,6 +244,8 @@ alias -g E='2>&1'
 alias -g HE='2>>( sed -ue "s/.*/$fg_bold[red]&$reset_color/" 1>&2 )' # Highlight Errors
 alias -g T='-t "tmux att || (sleep 2 && tmux new)"'
 alias -g NC='| grep -Pv "(^$|^\s+$|^#|^\s+#)"'
+# Informational aliases
+alias info_openvz='echo -e "* if('''is_running''') {\n\e[1;33m\troot\e[0m;\n} elif('''is_not_running''') {\n\e[1;34m\tprivate\e[0m;\n}"'
 
 # Use hard limits, except for a smaller stack and no core dumps
 unlimit
