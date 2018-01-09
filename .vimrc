@@ -199,15 +199,18 @@ menu Hex.ASCII		:%!xxd -r<CR>
 nmap <leader>e		:e ++enc=cp1251<CR>
 nmap <leader>E		:e ++enc=utf-8<CR>
 
+" Paste mode
+nnoremap <leader>p	:set invpaste paste?<CR>
+
 " Read mode
 nmap <leader>r		:set nolist<CR>:set wrap<CR>:set nonumber<CR>
 nmap <leader>R		:set list<CR>:set nowrap<CR>:set number<CR>
 " переназначаем клавишу Y на более логичное действие (moolenaar сам это советует)
 map Y y$
 
-" Paste mode
-nmap <leader>p		:set paste<CR>
-nmap <leader>n		:set nopaste<CR>
+" Next/prev buffer
+nmap <leader>l		:bn<CR>
+nmap <leader>h		:bp<CR>
 " Clear search highlight
 nnoremap <leader><space>	:nohls<cr>
 
