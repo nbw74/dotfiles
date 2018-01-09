@@ -196,32 +196,29 @@ menu Fenc.EOL:mac	:set ff=mac<CR>
 menu Hex.HEX		:%!xxd<CR>
 menu Hex.ASCII		:%!xxd -r<CR>
 
-map <leader>e		:e ++enc=cp1251<CR>
-map <leader>E		:e ++enc=utf-8<CR>
+nmap <leader>e		:e ++enc=cp1251<CR>
+nmap <leader>E		:e ++enc=utf-8<CR>
 
-" Filemanager
-map <F6> <Esc>:Explore<CR>
 " Read mode
-nmap <leader>r :set nolist<CR>:set wrap<CR>:set nonumber<CR>
-nmap <leader>R :set list<CR>:set nowrap<CR>:set number<CR>
+nmap <leader>r		:set nolist<CR>:set wrap<CR>:set nonumber<CR>
+nmap <leader>R		:set list<CR>:set nowrap<CR>:set number<CR>
 " переназначаем клавишу Y на более логичное действие (moolenaar сам это советует)
 map Y y$
 
-" Next buffer
-nmap <leader>n :bn!<CR>
-" Previous buffer
-nmap <leader>p :bp!<CR>
+" Paste mode
+nmap <leader>p		:set paste<CR>
+nmap <leader>n		:set nopaste<CR>
 " Clear search highlight
-nnoremap <leader><space> :nohls<cr>
+nnoremap <leader><space>	:nohls<cr>
 
 " ADVANCED COMMENTS BEGIN
 " csym here is variable which contains comment symbol, like `#' or `"'
 " Comment line(s)
-map <leader>c :exe "s/^/".csym." /"<CR> :nohls<CR>
-vmap <leader>c :call VisComment(csym)<CR>
+map <leader>c		:exe "s/^/".csym." /"<CR> :nohls<CR>
+vmap <leader>c		:call VisComment(csym)<CR>
 " Uncomment line(s)
-map <leader>u :exe "s/^".csym." //"<CR> :nohls<CR>
-vmap <leader>u :call VisUncomment(csym)<CR>
+map <leader>u		:exe "s/^".csym." //"<CR> :nohls<CR>
+vmap <leader>u		:call VisUncomment(csym)<CR>
 
 fun! VisComment(c)
   exe "s/^/".a:c." /"
