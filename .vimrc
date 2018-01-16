@@ -161,7 +161,7 @@ set noexpandtab
 set nowrap
 set scrolloff=3						" Try to show at least three lines 
 set sidescrolloff=2					" and two columns of context when scrolling
-set statusline=\ \ %f\ %1*%m%*\ %R%=\'%F\'\ %4l(%p%%):%c\ 0x%2B\ %y,%{&encoding}\
+set statusline=\ \ %f\ %1*%m%*\ %R%=\'%F\'\ %4l(%p%%):%c\ 0x%2B\ %y,%{&encoding}\ 
 set laststatus=2					" строка статуса всегда видима
 set virtualedit=block					" [ insert | all ]
 set history=2048
