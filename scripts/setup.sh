@@ -58,7 +58,7 @@ lnk() {
                 mv $f ${f}-$(shuf -i 1000-9999 -n 1).bak
             fi
 
-            echo_info "ln -s $f"
+            echo_info_ln "ln -s $f"
             ln -s .dotfiles/$f $f
         fi
     done
@@ -118,11 +118,13 @@ readonly C_RED="tput setaf 1"
 readonly C_GREEN="tput setaf 2"
 readonly C_YELLOW="tput setaf 3"
 readonly C_BLUE="tput setaf 4"
+readonly C_CYAN="tput setaf 6"
 readonly C_WHITE="tput setaf 7"
 
 echo_err() { $C_WHITE; echo "* ERROR: $*" 1>&2; $C_RST; }
 echo_warn() { $C_YELLOW; echo "* WARNING: $*" 1>&2; $C_RST; }
 echo_info() { $C_BLUE; echo "* INFO: $*" 1>&2; $C_RST; }
+echo_info_ln() { $C_CYAN; echo "* INFO: $*" 1>&2; $C_RST; }
 echo_ok() { $C_GREEN; echo "* OK" 1>&2; $C_RST; }
 
 main
