@@ -54,7 +54,12 @@ lnk() {
 
     for f in ${base[*]}; do
         if [[ ! -h $f ]]; then
-            ln -svf .dotfiles/$f $f
+            if [[ -e $f ]]; then
+                mv $f ${f}-$(shuf -i 1000-9999 -n 1).bak
+            fi
+
+            echo_info "ln -s $f"
+            ln -s .dotfiles/$f $f
         fi
     done
 
