@@ -19,62 +19,19 @@ main() {
 
     pkginstall
 
-    echo_info "git pull on .dotfiles"
-    cd $HOME/.dotfiles
-    git pull
-
+    dotup
     submodules
-
     lnk
 
     echo_ok
 }
 
-pkginstall() {
+dotup() {
 
-    typeset -i redhat_distribution_major_version=0
+    cd $HOME/.dotfiles
 
-    if [[ -r /etc/redhat-release ]]; then
-        redhat_distribution_major_version=$(awk '{ match($0,"[.0-9]+",a) } END { print int(a[0]) }' /etc/redhat-release)
-    fi
-
-    if [[ ! -f /bin/zsh ]]; then
-        echo_info "Installing packages..."
-        if (( redhat_distribution_major_version >= 21 )); then
-            sudo dnf install ${packages[*]}
-        elif (( redhat_distribution_major_version > 0 )); then
-            sudo yum install ${packages[*]}
-        fi
-    fi
-}
-
-lnk() {
-
-    cd $HOME
-
-    for f in ${base[*]}; do
-        if [[ ! -h $f ]]; then
-            if [[ -e $f ]]; then
-                mv $f ${f}-$(shuf -i 1000-9999 -n 1).bak
-            fi
-
-            echo_info_ln "ln -s $f"
-            ln -s .dotfiles/$f $f
-        fi
-    done
-
-    for d in ${dirs[*]}; do
-        if [[ ! -d $d ]]; then
-            mkdir -p $d
-        fi
-    done
-
-    cd $mcdir
-    if [[ ! -h $mcini ]]; then
-        ln -svf ../../.dotfiles/.config/mc/$mcini $mcini
-    fi
-
-    touch .viminfo
+    echo_info "git pull on .dotfiles"
+    git pull
 }
 
 submodules() {
@@ -102,6 +59,56 @@ submodules() {
         unset Sub
     done
 
+    [[ -d ${HOME}/.dotfiles/.vim/bundle/nerdtree-git-plugin ]] && rm -rf "${HOME}/.dotfiles/.vim/bundle/nerdtree-git-plugin"
+
+}
+
+pkginstall() {
+
+    typeset -i redhat_distribution_major_version=0
+
+    if [[ -r /etc/redhat-release ]]; then
+        redhat_distribution_major_version=$(awk '{ match($0,"[.0-9]+",a) } END { print int(a[0]) }' /etc/redhat-release)
+    fi
+
+    if [[ ! -f /bin/zsh ]]; then
+        echo_info "Installing packages..."
+        if (( redhat_distribution_major_version >= 21 )); then
+            sudo dnf install ${packages[*]}
+        elif (( redhat_distribution_major_version > 0 )); then
+            sudo yum install ${packages[*]}
+        fi
+    fi
+}
+
+lnk() {
+
+    cd $HOME
+
+    touch .viminfo
+
+    for f in ${base[*]}; do
+        if [[ ! -h $f ]]; then
+            if [[ -e $f ]]; then
+                mv $f ${f}-$(shuf -i 1000-9999 -n 1).bak
+            fi
+
+            echo_info_ln "ln -s $f"
+            ln -s .dotfiles/$f $f
+        fi
+    done
+
+    for d in ${dirs[*]}; do
+        if [[ ! -d $d ]]; then
+            mkdir -p $d
+        fi
+    done
+
+    cd $mcdir
+    if [[ ! -h $mcini ]]; then
+        ln -svf ../../.dotfiles/.config/mc/$mcini $mcini
+    fi
+    cd $HOME
 }
 
 except() {
