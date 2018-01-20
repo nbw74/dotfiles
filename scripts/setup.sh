@@ -108,7 +108,8 @@ lnk() {
 
     cd ${HOME}/$mcdir
     if [[ ! -h $mcini ]]; then
-        ln -svf ../../.dotfiles/${mcdir}/$mcini $mcini
+        echo_info_ln "ln -sf $mcini"
+        ln -sf ../../.dotfiles/${mcdir}/$mcini $mcini
     fi
     cd $HOME
 }
