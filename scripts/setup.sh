@@ -106,9 +106,9 @@ lnk() {
         fi
     done
 
-    cd $mcdir
+    cd ${HOME}/$mcdir
     if [[ ! -h $mcini ]]; then
-        ln -svf ../../.dotfiles/.config/mc/$mcini $mcini
+        ln -svf ../../.dotfiles/${mcdir}/$mcini $mcini
     fi
     cd $HOME
 }
