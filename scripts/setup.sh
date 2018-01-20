@@ -59,7 +59,9 @@ submodules() {
         unset Sub
     done
 
-    [[ -d ${HOME}/.dotfiles/.vim/bundle/nerdtree-git-plugin ]] && rm -rf "${HOME}/.dotfiles/.vim/bundle/nerdtree-git-plugin"
+    if [[ -d ${HOME}/.dotfiles/.vim/bundle/nerdtree-git-plugin ]]; then
+        rm -rf "${HOME}/.dotfiles/.vim/bundle/nerdtree-git-plugin"
+    fi
 
 }
 
