@@ -7,3 +7,6 @@
 [submodule ".vim/bundle/table-mode"]
 	path = .vim/bundle/table-mode
 	url = https://github.com/dhruvasagar/vim-table-mode.git
+[submodule ".zsh/zsh-syntax-highlighting"]
+	path = .zsh/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
