@@ -14,6 +14,7 @@ typeset -a packages=( "zsh" "vim" "tree" )
 # CONFIGURATION END
 
 main() {
+    local fn=$FUNCNAME
 
     trap 'except $LINENO' ERR
 
@@ -22,11 +23,13 @@ main() {
     dotup
     submodules
     lnk
+    attr
 
     echo_ok
 }
 
 dotup() {
+    local fn=$FUNCNAME
 
     cd $HOME/.dotfiles
 
@@ -35,6 +38,7 @@ dotup() {
 }
 
 submodules() {
+    local fn=$FUNCNAME
 
     cd ${HOME}/.dotfiles
 
@@ -66,7 +70,7 @@ submodules() {
 }
 
 pkginstall() {
-
+    local fn=$FUNCNAME
     typeset -i redhat_distribution_major_version=0
 
     if [[ -r /etc/redhat-release ]]; then
@@ -84,6 +88,7 @@ pkginstall() {
 }
 
 lnk() {
+    local fn=$FUNCNAME
 
     cd $HOME
 
@@ -114,11 +119,29 @@ lnk() {
     cd $HOME
 }
 
+attr() {
+    local fn=$FUNCNAME
+    local attrfile=".prompt.attr"
+
+    cd $HOME
+
+    if [[ ! -f /etc/bash.attr && ! -f $attrfile ]]; then
+        echo > $attrfile << 'EOF'
+# Username color (phy=GREEN, virt=CYAN)
+PR_USER=${PR_BR_BLUE}
+# Root user color (phy=RED, virt=YELLOW)
+PR_ROOT=${PR_BR_BLUE}
+# Hostname color (prod=RED, dev=GREEN, test=YELLOW, net=BLUE, localhost=MAGENTA)
+PR_HOST=${PR_BR_RED}
+EOF
+    fi
+}
+
 except() {
     ret=$?
 
     if (( ret )); then
-        echo_err "ERROR ON LINE $LINENO"
+        echo_err "ERROR ON LINE $LINENO in function ${fn:-NULL}"
         exit $ret
     fi
 }
