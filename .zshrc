@@ -114,9 +114,14 @@ then
 fi
 
 typeset -i redhat_distribution_major_version=0
+typeset -i debian_distribution_major_version=0
 
 if [[ -r /etc/redhat-release ]]; then
     redhat_distribution_major_version=$(awk '{ match($0,"[.0-9]+",a) } END { print int(a[0]) }' /etc/redhat-release)
+fi
+
+if [[ -r /etc/debian_version ]]; then
+    debian_distribution_major_version=$(awk '{ match($0,"[0-9]+"); exit } END { print substr( $0, RSTART, RLENGTH ) }' /etc/debian_version)
 fi
 
 #g#
@@ -720,16 +725,22 @@ ${PR_RESET}%1(j.${PR_BR_RED}.)%#${PR_RESET} ${vcs_info_msg_0_:-}'
     SPROMPT=' ${PR_UL}Товарищ!${PR_RESET} Исправить ${PR_UL}'%R$'${PR_RESET} на ${PR_BOLD}'%r$'${PR_RESET}? ([y]да [${PR_UL}n${PR_RESET}]нет [a]пошёл на хуй [e]сам исправлю) _ '
 fi
 
-source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+local -i NOHL=0
 
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
-ZSH_HIGHLIGHT_STYLES[path]='fg=none,underline'
-ZSH_HIGHLIGHT_PATTERNS+=('rm -rf *' 'fg=white,bold,bg=red')
-ZSH_HIGHLIGHT_PATTERNS+=('\*' 'fg=red,bold,bg=black')
-ZSH_HIGHLIGHT_PATTERNS+=('\|' 'fg=white,bold')
-# ZSH_HIGHLIGHT_PATTERNS+=('(group|host|hostgroup|hbacrule|hbacsvc|hbactest|krbtpolicy|passwd|pwpolicy|service|show|user)-' 'fg=white')
-#
-# source $HOME/.zsh/zsh-git-prompt/zshrc.sh
-# RPROMPT='$(git_super_status)'
+if (( debian_distribution_major_version && debian_distribution_major_version <= 6 )); then
+    NOHL=1
+fi
+
+if (( ! NOHL )); then
+    source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+    ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
+    ZSH_HIGHLIGHT_STYLES[path]='fg=none,underline'
+    ZSH_HIGHLIGHT_PATTERNS+=('rm -rf *' 'fg=white,bold,bg=red')
+    ZSH_HIGHLIGHT_PATTERNS+=('\*' 'fg=red,bold,bg=black')
+    ZSH_HIGHLIGHT_PATTERNS+=('\|' 'fg=white,bold')
+    # ZSH_HIGHLIGHT_PATTERNS+=('(group|host|hostgroup|hbacrule|hbacsvc|hbactest|krbtpolicy|passwd|pwpolicy|service|show|user)-' 'fg=white')
+    #
+fi
 
 ## EOF
