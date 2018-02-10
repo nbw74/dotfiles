@@ -359,20 +359,22 @@ bindkey -e                 # emacs key bindings
 
 # Bindings from Fedorchuck
 # bindkey "^[[2~" yank
-bindkey "^[[3~" delete-char
-bindkey "^[[7~" beginning-of-line
-bindkey "^[[8~" end-of-line
-# bindkey "^[e" expand-cmd-path				## C-e for expanding path of typed command
+bindkey '^[[3~' delete-char
+bindkey '^[[7~' beginning-of-line
+bindkey '^[[8~' end-of-line
+# bindkey '^[e' expand-cmd-path				## C-e for expanding path of typed command
 #t# bind history to up down keys
 autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
-bindkey "^[[A" up-line-or-beginning-search
-bindkey "^[[B" down-line-or-beginning-search
+bindkey '^[[A' up-line-or-beginning-search
+bindkey '^[[B' down-line-or-beginning-search
 # Fuckin' Debian and it's derivatives
-bindkey "^[OA" up-line-or-beginning-search
-bindkey "^[OB" down-line-or-beginning-search
+bindkey '^[OA' up-line-or-beginning-search
+bindkey '^[OB' down-line-or-beginning-search
+# Reverse moving in menu completion
+bindkey '^[[Z' reverse-menu-complete
 
 # Setup new style completion system. To see examples of the old style (compctl
 # based) programmable completion, check Misc/compctl-examples in the zsh
