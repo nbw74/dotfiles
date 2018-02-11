@@ -181,6 +181,7 @@ alias mkdir='nocorrect mkdir'		# no spelling correction on mkdir
 alias j=jobs
 alias d='dirs -v'
 alias h=history
+alias dicker=docker
 #g#
 alias mdstat='cat /proc/mdstat'
 alias ...='cd ../../'
@@ -380,7 +381,7 @@ bindkey '^[[Z' reverse-menu-complete
 # based) programmable completion, check Misc/compctl-examples in the zsh
 # distribution.
 autoload -U compinit promptinit
-compinit
+compinit -u
 promptinit
 
 # http://linsovet.org.ua/zsh-auto-quoting-url
