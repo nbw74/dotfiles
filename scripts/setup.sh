@@ -52,7 +52,7 @@ submodules() {
 
     echo "$submodules_list" | while read -r line; do
         typeset -a Sub=()
-        mapfile -t Sub < <(echo "$line")
+        read -r -a Sub <<< "$line"
 
         if [[ ${Sub[0]} =~ -.* ]]; then
             echo_info "git submodule init ${Sub[1]}"
@@ -91,13 +91,20 @@ pkginstall() {
 
 lnk() {
     local fn=${FUNCNAME[0]}
+    local -i pinned=0
 
     cd "$HOME" || false
 
     touch .viminfo
 
     for f in ${base[*]}; do
-        if ! head "$f" | grep -Fqi 'pinned'; then
+        if [[ -f "$f" ]]; then
+            if head "$f" | grep -Fqi 'pinned'; then
+                pinned=1
+            fi
+        fi
+
+        if (( ! pinned )); then
             if [[ ! -h $f ]]; then
                 if [[ -e $f ]]; then
                     mv "$f" "${f}-$(shuf -i 1000-9999 -n 1).bak"
@@ -107,6 +114,8 @@ lnk() {
                 ln -s ".dotfiles/$f" "$f"
             fi
         fi
+
+        pinned=0
     done
 
     for d in ${dirs[*]}; do
