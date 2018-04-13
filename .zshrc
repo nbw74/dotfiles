@@ -186,6 +186,12 @@ alias dicker=docker
 alias mdstat='cat /proc/mdstat'
 alias ...='cd ../../'
 alias ....='cd ../../../'
+# git
+alias gpl='git pull'
+alias gps='git push'
+alias gcm='git commit -m'
+alias gco='git checkout'
+alias gst='git status'
 
 if (( redhat_distribution_major_version >= 21 )); then
     salias ds="dnf search"
