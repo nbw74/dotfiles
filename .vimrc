@@ -237,6 +237,9 @@ au! BufNewFile,BufRead *.vim let csym="\""
 au! BufNewFile,BufRead .vimrc let csym="\""
 " ADVANCED COMMENTS END
 
+" vim-fugitive "addon"
+command Greview :Git! diff --staged
+
 " Notes
 
 " :w !sudo tee %	запись через sudo
