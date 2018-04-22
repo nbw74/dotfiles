@@ -16,3 +16,6 @@
 [submodule ".vim/bundle/vim-merginal"]
 	path = .vim/bundle/vim-merginal
 	url = https://github.com/idanarye/vim-merginal.git
+[submodule ".vim/bundle/gv.vim"]
+	path = .vim/bundle/gv.vim
+	url = https://github.com/junegunn/gv.vim.git

@@ -258,6 +258,7 @@ alias -g T='-t "tmux att || (sleep 2 && tmux new)"'
 alias -g NC='| grep -Pv "(^$|^\s+$|^#|^\s+#)"'
 # Informational aliases
 alias info_openvz='echo -e "* if('''is_running''') {\n\e[1;33m\troot\e[0m;\n} elif('''is_not_running''') {\n\e[1;34m\tprivate\e[0m;\n}"'
+alias info_colors='for i in {0..8} ; do printf "\x1b[0;38;5;${i}mcolour${i}\t\x1b[1;38;5;${i}mcolour${i}\n"; done'
 
 # Use hard limits, except for a smaller stack and no core dumps
 unlimit
