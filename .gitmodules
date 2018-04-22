@@ -4,9 +4,6 @@
 [submodule ".vim/bundle/nerdtree-git"]
 	path = .vim/bundle/nerdtree-git
 	url = https://github.com/Xuyuanp/nerdtree-git-plugin.git
-[submodule ".vim/bundle/table-mode"]
-	path = .vim/bundle/table-mode
-	url = https://github.com/dhruvasagar/vim-table-mode.git
 [submodule ".zsh/zsh-syntax-highlighting"]
 	path = .zsh/zsh-syntax-highlighting
 	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
@@ -16,3 +13,6 @@
 [submodule ".vim/bundle/vim-polyglot"]
 	path = .vim/bundle/vim-polyglot
 	url = https://github.com/sheerun/vim-polyglot.git
+[submodule ".vim/bundle/vim-merginal"]
+	path = .vim/bundle/vim-merginal
+	url = https://github.com/idanarye/vim-merginal.git
