@@ -256,7 +256,7 @@ alias -g E='2>&1'
 alias -g HE='2>>( sed -ue "s/.*/$fg_bold[red]&$reset_color/" 1>&2 )' # Highlight Errors
 alias -g T='-t "tmux att || (sleep 2 && tmux new)"'
 alias -g NC='| grep -Pv "(^$|^\s+$|^#|^\s+#)"'
-alias -g P='sudo -Es /usr/local/bin/eos -m passwd -u'
+alias -g P='-t "sudo -Es /usr/local/bin/eos -m passwd -u"'
 # Informational aliases
 alias info_openvz='echo -e "* if('''is_running''') {\n\e[1;33m\troot\e[0m;\n} elif('''is_not_running''') {\n\e[1;34m\tprivate\e[0m;\n}"'
 alias info_colors='for i in {0..8} ; do printf "\x1b[0;38;5;${i}mcolour${i}\t\x1b[1;38;5;${i}mcolour${i}\n"; done'
