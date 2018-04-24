@@ -259,6 +259,10 @@ alias -g NC='| grep -Pv "(^$|^\s+$|^#|^\s+#)"'
 # Informational aliases
 alias info_openvz='echo -e "* if('''is_running''') {\n\e[1;33m\troot\e[0m;\n} elif('''is_not_running''') {\n\e[1;34m\tprivate\e[0m;\n}"'
 alias info_colors='for i in {0..8} ; do printf "\x1b[0;38;5;${i}mcolour${i}\t\x1b[1;38;5;${i}mcolour${i}\n"; done'
+alias info_pg_is_in_recovery='psql -Upostgres -AXtc "SELECT pg_is_in_recovery()"'
+alias info_pg_replication='[[ $(psql -Upostgres -AXtc "SELECT pg_is_in_recovery()") == "t" ]] && \
+    psql -Upostgres -Xc "SELECT now() - pg_last_xact_replay_timestamp() AS write_or_replication_delay" || \
+    psql -Upostgres -Xc "SELECT client_addr, state, sent_location, write_location, flush_location, replay_location FROM pg_stat_replication;"'
 
 # Use hard limits, except for a smaller stack and no core dumps
 unlimit
