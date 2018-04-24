@@ -263,6 +263,7 @@ alias info_pg_is_in_recovery='psql -Upostgres -AXtc "SELECT pg_is_in_recovery()"
 alias info_pg_replication='[[ $(psql -Upostgres -AXtc "SELECT pg_is_in_recovery()") == "t" ]] && \
     psql -Upostgres -Xc "SELECT now() - pg_last_xact_replay_timestamp() AS write_or_replication_delay" || \
     psql -Upostgres -Xc "SELECT client_addr, state, sent_location, write_location, flush_location, replay_location FROM pg_stat_replication;"'
+alias info_pg_pgpass='echo -e "\e[37mhostname\e[0m:\e[37mport\e[0m:\e[37mdatabase\e[0m:\e[37musername\e[0m:\e[37mpassword\e[0m"'
 
 # Use hard limits, except for a smaller stack and no core dumps
 unlimit
