@@ -198,6 +198,9 @@ nmap <leader>E		:e ++enc=utf-8<CR>
 " Paste mode
 nnoremap <leader>p	:set invpaste paste?<CR>
 
+" ToggleBool
+noremap <leader>b	:ToggleBool<CR>
+
 " Read mode
 nmap <leader>r		:set nolist<CR>:set wrap<CR>:set nonumber<CR>
 nmap <leader>R		:set list<CR>:set nowrap<CR>:set number<CR>
