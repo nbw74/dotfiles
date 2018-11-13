@@ -69,33 +69,6 @@ if has("vim_starting")
     set autochdir
 endif
 
-if has("gui_running")
-    " nice schemes for GUI: 
-    "				Dark: darkblue, desert, inkpot, jellybeans, moria 
-    "				Bright: default, peachpuff, zellner
-    colorscheme desert
-    set lines=36
-    set columns=156
-    set guifont=DejaVu\ Sans\ Mono\ 10
-    set guioptions=acegit
-else
-"     if strftime("%H") < 10
-"         colorscheme jellybeans
-"     else
-"         if strftime("%H") < 19
-"             colo murphy
-"         else
-"             colorscheme jellybeans
-"         endif
-"     endif
-    if v:version > 700
-	set background=dark
-	colorscheme gruvbox
-    else
-	colorscheme murphy
-    endif
-endif
-
 " http://vim.wikia.com/wiki/Ignore_white_space_in_vimdiff
 if &diff
     " diff mode
@@ -127,8 +100,8 @@ endif
 set t_ut=
 " For Ansible YAML syntax plugin
 " let g:ansible_options = {'ignore_blank_lines': 0}
-" let g:ansible_unindent_after_newline = 1
 let g:ansible_extra_keywords_highlight = 1
+let g:ansible_name_highlight = 'd'
 
 set list						" обеспечение listchars
 set linebreak						" переносить строки по словам
@@ -254,4 +227,32 @@ command Greview :Git! diff --staged
 if v:version > 700
     execute pathogen#infect()
 endif
+
+if has("gui_running")
+    " nice schemes for GUI:
+    "				Dark: darkblue, desert, inkpot, jellybeans, moria
+    "				Bright: default, peachpuff, zellner
+    colorscheme desert
+    set lines=36
+    set columns=156
+    set guifont=DejaVu\ Sans\ Mono\ 10
+    set guioptions=acegit
+else
+"     if strftime("%H") < 10
+"         colorscheme jellybeans
+"     else
+"         if strftime("%H") < 19
+"             colo murphy
+"         else
+"             colorscheme jellybeans
+"         endif
+"     endif
+    if v:version > 700
+	set background=dark
+	colorscheme gruvbox
+    else
+	colorscheme murphy
+    endif
+endif
+
 " EOF
