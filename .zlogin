@@ -15,12 +15,15 @@ then
 fi
 
 local nodename=$(uname -n)
-local -i keyrun=1
+local -i keyrun=0
 local -a keylist
 
 case ${nodename%%\.*} in
-    nestor|admin1)
+    nestor)
 	keylist=( id_dsa id_rsa )
+        ;;
+    admin1)
+	keylist=( id_dsa id_rsa id_ed25519 )
         ;;
     kino)
 	keylist=( id_rsa_wm id_ed25519 )
