@@ -1,6 +1,6 @@
 #
 # Zsh configuration file
-# Generated and adopted for WM by nbw 2007-2017
+# by nbw 2007-2019
 #
 # Tags:
 # g: grml.org zsh settings
@@ -402,6 +402,12 @@ promptinit
 # http://linsovet.org.ua/zsh-auto-quoting-url
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
+
+# https://stackoverflow.com/questions/26409337/inserting-a-newline-in-a-multiline-zsh-command-pulled-from-history
+# Editing current commandline with ^X^E
+autoload -z edit-command-line
+zle -N edit-command-line
+bindkey "^X^E" edit-command-line
 
 # VCS information
 # http://zsh.sourceforge.net/Doc/Release/User-Contributions.html#Version-Control-Information
