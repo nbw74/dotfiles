@@ -100,6 +100,8 @@ editor_drop_selection_on_copy=true
 editor_state_full_filename=false
 editor_stop_format_chars=-+*\\,.;:&>
 
+skin=xoria256
+
 [Layout]
 message_visible=0
 keybar_visible=0

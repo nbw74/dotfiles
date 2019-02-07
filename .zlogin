@@ -15,8 +15,12 @@ then
 fi
 
 local nodename=$(uname -n)
-local -i keyrun=1
+local -i keyrun=0
 local -a keylist
+
+if (( SHLVL > 1 )); then
+    keyrun=1
+fi
 
 case ${nodename%%\.*} in
     nestor|admin1)
