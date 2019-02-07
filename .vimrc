@@ -100,6 +100,7 @@ endif
 set t_ut=
 " For Ansible YAML syntax plugin
 " let g:ansible_options = {'ignore_blank_lines': 0}
+let g:ansible_unindent_after_newline = 1
 let g:ansible_extra_keywords_highlight = 1
 let g:ansible_name_highlight = 'd'
 
