@@ -66,6 +66,10 @@ submodules() {
         unset Sub
     done
 
+    echo_info "Pull for all submodules:"
+#     git submodule foreach "(git checkout master; git pull)"
+    git pull --recurse-submodules
+
     if [[ -d ${HOME}/.dotfiles/.vim/bundle/nerdtree-git-plugin ]]; then
         rm -rf "${HOME}/.dotfiles/.vim/bundle/nerdtree-git-plugin"
     fi
