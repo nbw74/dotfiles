@@ -618,8 +618,8 @@ src() {
     autoload -U zrecompile;
     [[ -f "~/.zshrc" ]] && zrecompile -p ~/.zshrc;
     [[ -f "~/.zcompdump" ]] && zrecompile -p ~/.zcompdump;
-    [[ -f "~/.zshrc.zwc.old" ]] && rm -f ~/.zshrc.zwc.old;
-    [[ -f "~/.zcompdump.zwc.old" ]] && rm -f ~/.zcompdump.zwc.old;
+    [[ -f "~/.zshrc.zwc.old" ]] && rm -fv ~/.zshrc.zwc.old;
+    [[ -f "~/.zcompdump.zwc.old" ]] && rm -fv ~/.zcompdump.zwc.old;
     source ~/.zshrc;
 }
 #g#

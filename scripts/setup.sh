@@ -11,6 +11,7 @@ typeset mcdir=".config/mc"
 typeset mcini="ini"
 typeset -a dirs=( ".tmp" "$mcdir" )
 typeset -a packages=( "zsh" "vim" "tree" )
+typeset -a packages_legacy=( "virt-what" )
 # CONFIGURATION END
 
 main() {
@@ -84,7 +85,7 @@ pkginstall() {
         if (( redhat_distribution_major_version >= 21 )); then
             sudo dnf install "${packages[@]}"
         elif (( redhat_distribution_major_version > 0 )); then
-            sudo yum install "${packages[@]}"
+            sudo yum install "${packages[@]}" "${packages_legacy[@]}"
         fi
     fi
 }
@@ -136,19 +137,72 @@ lnk() {
 attr() {
     local fn=${FUNCNAME[0]}
     local attrfile=".prompt.attr"
+    local -i is_virtualized=0
+
+    if [[ -f /etc/bash.attr || -f $attrfile ]]; then
+	return
+    fi
+
+    if command -v systemctl >/dev/null
+    then
+	if sudo systemd-detect-virt -q
+	then
+	    is_virtualized=1
+	fi
+    else
+	if [[ -n "$(sudo virt-what)" ]]; then
+	    is_virtualized=1
+	fi
+    fi
+
+    if (( is_virtualized )); then
+	color_u=CYAN
+	color_r=YELLOW
+    else
+	color_u=GREEN
+	color_r=RED
+    fi
+
+    PS3="Please specify the environment for colorization hostname in the prompt: "
+
+    select env in production testing staging auxiliary localhost
+    do
+	case $env in
+	    production)
+		color_e=RED
+		break
+		;;
+	    testing)
+		color_e=GREEN
+		break
+		;;
+	    staging)
+		color_e=YELLOW
+		break
+		;;
+	    auxiliary)
+		color_e=BLUE
+		break
+		;;
+	    localhost)
+		color_e=MAGENTA
+		break
+		;;
+	    *)
+		echo_warn "Please try again."
+	esac
+    done
 
     cd "$HOME" || false
 
-    if [[ ! -f /etc/bash.attr && ! -f $attrfile ]]; then
-        cat > $attrfile << 'EOF'
+    cat > $attrfile <<EOF
 # Username color (phy=GREEN, virt=CYAN)
-PR_USER=${PR_BR_BLUE}
+PR_USER=\$PR_BR_$color_u
 # Root user color (phy=RED, virt=YELLOW)
-PR_ROOT=${PR_BR_BLUE}
-# Hostname color (prod=RED, dev=GREEN, test=YELLOW, net=BLUE, localhost=MAGENTA)
-PR_HOST=${PR_BR_RED}
+PR_ROOT=\$PR_BR_$color_r
+# Hostname color (production=RED, testing=GREEN, staging=YELLOW, auxiliary=BLUE, localhost=MAGENTA)
+PR_HOST=\$PR_BR_$color_e
 EOF
-    fi
 }
 
 except() {
