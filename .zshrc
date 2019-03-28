@@ -265,7 +265,7 @@ alias info_colors='for i in {0..8} ; do printf "\x1b[0;38;5;${i}mcolour${i}\t\x1
 alias info_pg_is_in_recovery='psql -Upostgres -AXtc "SELECT pg_is_in_recovery()"'
 alias info_pg_replication='[[ $(psql -Upostgres -AXtc "SELECT pg_is_in_recovery()") == "t" ]] && \
     psql -Upostgres -Xc "SELECT now() - pg_last_xact_replay_timestamp() AS write_or_replication_delay" || \
-    if (( $(psql -Upostgres -AtXc "SHOW server_versuin_num;") > 99999 )); then \
+    if (( $(psql -Upostgres -AtXc "SHOW server_version_num;") > 99999 )); then \
     psql -Upostgres -Xc "SELECT client_addr, state, sent_location, write_location, flush_location, replay_location FROM pg_stat_replication;"; \
     else \
     psql -Upostgres -Xc "SELECT client_addr, state, sent_lsn, write_lsn, flush_lsn, replay_lsn FROM pg_stat_replication;"; fi'
