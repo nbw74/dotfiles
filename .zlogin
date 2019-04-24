@@ -20,6 +20,8 @@ local -a keylist
 
 if (( SHLVL > 1 )); then
     keyrun=1
+elif [[ -n "$SSH_TTY" ]]; then
+    keyrun=1
 fi
 
 case ${nodename%%\.*} in
