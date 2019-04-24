@@ -219,7 +219,7 @@ EOF
 }
 
 usage() {
-    echo -e "\\n    Usage: $bn [OPTIONS] <parameter>\\n
+    echo -e "\\n    Usage: $bn [OPTIONS]\\n
     Options:
 
     -s, --submodules	    also update Git submodules
