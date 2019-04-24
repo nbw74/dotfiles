@@ -5,6 +5,10 @@
 set -E
 set -o nounset
 
+# DEFAULTS BEGIN
+OPT_SUBMODULES=0
+# DEFAULTS END
+
 # CONFIGURATION BEGIN
 typeset -a base=( ".gitconfig" ".tmux.conf" ".vim" ".vimrc" ".zlogin" ".zlogout" ".zsh" ".zshrc" )
 typeset mcdir=".config/mc"
@@ -12,6 +16,7 @@ typeset mcini="ini"
 typeset -a dirs=( ".tmp" "$mcdir" )
 typeset -a packages=( "zsh" "vim" "tree" )
 typeset -a packages_legacy=( "virt-what" )
+typeset bn="$(basename "$0")"
 # CONFIGURATION END
 
 main() {
@@ -22,7 +27,11 @@ main() {
     pkginstall
 
     dotup
-    submodules
+
+    if (( OPT_SUBMODULES )); then
+	submodules
+    fi
+
     lnk
     attr
 
@@ -169,18 +178,18 @@ attr() {
 
     PS3="Please specify the environment for colorization hostname in the prompt: "
 
-    select env in production testing staging auxiliary localhost
+    select env in production development testing auxiliary localhost
     do
 	case $env in
 	    production)
 		color_e=RED
 		break
 		;;
-	    testing)
+	    development)
 		color_e=GREEN
 		break
 		;;
-	    staging)
+	    testing)
 		color_e=YELLOW
 		break
 		;;
@@ -209,6 +218,15 @@ PR_HOST=\$PR_BR_$color_e
 EOF
 }
 
+usage() {
+    echo -e "\\n    Usage: $bn [OPTIONS]\\n
+    Options:
+
+    -s, --submodules	    also update Git submodules
+    -h, --help              print help
+"
+}
+
 except() {
     ret=$?
 
@@ -231,5 +249,26 @@ echo_warn() { $C_YELLOW; echo "* WARNING: $*" 1>&2; $C_RST; }
 echo_info() { $C_BLUE; echo "* INFO: $*" 1>&2; $C_RST; }
 echo_info_ln() { $C_CYAN; echo "* INFO: $*" 1>&2; $C_RST; }
 echo_ok() { $C_GREEN; echo "* OK" 1>&2; $C_RST; }
+
+# Getopts
+getopt -T; (( $? == 4 )) || { echo "incompatible getopt version" >&2; exit 4; }
+
+if ! TEMP=$(getopt -o sh --longoptions submodules,help -n "$bn" -- "$@")
+then
+    echo "Terminating..." >&2
+    exit 1
+fi
+
+eval set -- "$TEMP"
+unset TEMP
+
+while true; do
+    case $1 in
+	-s|--submodules)	OPT_SUBMODULES=1 ;	shift	;;
+	-h|--help)		usage ;		exit 0	;;
+	--)			shift ;		break	;;
+	*)			usage ;		exit 1
+    esac
+done
 
 main
