@@ -16,6 +16,7 @@ typeset mcini="ini"
 typeset -a dirs=( ".tmp" "$mcdir" )
 typeset -a packages=( "zsh" "vim" "tree" )
 typeset -a packages_legacy=( "virt-what" )
+typeset bn="$(basename "$0")"
 # CONFIGURATION END
 
 main() {
