@@ -722,6 +722,19 @@ DEC() {
     echo -n "$2" | base64 -d | bzip2 -dc > "$1"
 }
 
+VMDiskExtendLast() {
+    local VMName=$1
+    local -a VMDevice=""
+    local -i VMNewDiskSize=0
+
+    trap exit ERR
+
+    VMDevice=( $(virsh qemu-monitor-command $VMName info block --hmp | awk '/file=/ { sub(/:/, ""); sub(/file=/, ""); a=$1; b=$4 } END { print a, b }') )
+    VMNewDiskSize=$(sudo lvdisplay -qq --units b ${VMDevice[2]} | awk '/LV Size/ { print $3 }')
+
+    virsh qemu-monitor-command $VMName block_resize ${VMDevice[1]} ${VMNewDiskSize}B --hmp
+}
+
 [[ -f "$BC_FILE" ]] && export BC_ENV_ARGS="-ql $BC_FILE"
 export LESS='-iMR -j5'
 export GREP_COLOR='1;32'
