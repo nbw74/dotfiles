@@ -687,7 +687,7 @@ VMDiskExtendLast() {
     VMDevice=( $(virsh qemu-monitor-command $VMName info block --hmp | awk '/file=/ { sub(/:/, ""); sub(/file=/, ""); a=$1; b=$4 } END { print a, b }') )
     VMNewDiskSize=$(sudo lvdisplay -qq --units b ${VMDevice[2]} | awk '/LV Size/ { print $3 }')
 
-    echo VM name: $VMName; block: ${VMDevice[1]}; device: ${VMDevice[2]}; size: ${VMNewDiskSize}.
+    echo "VM name: $VMName; block: ${VMDevice[1]}; device: ${VMDevice[2]}; size: ${VMNewDiskSize}."
     virsh qemu-monitor-command $VMName block_resize ${VMDevice[1]} ${VMNewDiskSize}B --hmp
 }
 
