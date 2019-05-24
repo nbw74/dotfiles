@@ -25,3 +25,6 @@
 [submodule ".vim/bundle/nginx.vim"]
 	path = .vim/bundle/nginx.vim
 	url = https://github.com/chr4/nginx.vim.git
+[submodule ".vim/bundle/indentLine"]
+	path = .vim/bundle/indentLine
+	url = https://github.com/Yggdroot/indentLine.git

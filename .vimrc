@@ -217,6 +217,8 @@ au! BufNewFile,BufRead .vimrc let csym="\""
 
 " vim-fugitive "addon"
 command Greview :Git! diff --staged
+" indentLine
+let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 
 " Notes
 
