@@ -9,7 +9,7 @@ then
     echo -e '\e[1;31m* DEGRADED MDRAID DETECTED!\e[0m'
 fi
 
-if hash kubectl 2>/dev/null
+if command -v kubectl >/dev/null
 then
     source <(kubectl completion zsh)
 fi
