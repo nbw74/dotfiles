@@ -691,6 +691,49 @@ VMDiskExtendLast() {
     virsh qemu-monitor-command $VMName block_resize ${VMDevice[1]} ${VMNewDiskSize}B --hmp
 }
 
+VGExtend() {
+    emulate -L zsh
+
+    if (( EUID )); then
+        echo "You must be supersuser for using this function. Exiting"
+        return 1
+    fi
+
+    local block_device
+    local target_vg
+    local -i lastpart=0
+
+    trap return ERR
+
+    echo pvs:
+    pvs
+    echo vgs:
+    vgs
+    echo lvs:
+    lvs
+    echo disks:
+    ls /dev/[sv]d?
+
+    vared -p 'Enter block device name (format: [sv]d[a-z]): ' -c block_device
+    vared -p 'Enter volume group name (format: [a-z0-9]+): ' -c target_vg
+
+    echo Verify disk:
+    sgdisk /dev/$block_device -v
+    echo Create a new partition:
+    sgdisk /dev/$block_device -b sgdisk-$(date '+%s').gptbak -e -n 0:0:0
+    echo partprobe:
+    partprobe
+    lastpart=$(sgdisk -p /dev/$block_device | awk 'END { print $1 }')
+    echo Change partition\'s type code
+    sgdisk /dev/$block_device -t ${lastpart}:8e00 -c ${lastpart}:"PV $(date '+%F')"
+    echo partprobe:
+    partprobe
+    echo vgextend:
+    vgextend $target_vg /dev/${block_device}$lastpart
+    echo vgs:
+    vgs
+}
+
 [[ -f "$BC_FILE" ]] && export BC_ENV_ARGS="-ql $BC_FILE"
 export LESS='-iMR -j5'
 export GREP_COLOR='1;32'
