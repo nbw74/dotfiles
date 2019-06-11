@@ -793,4 +793,7 @@ if [ -f '/home/nbw/google-cloud-sdk/path.zsh.inc' ]; then . '/home/nbw/google-cl
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/nbw/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/nbw/google-cloud-sdk/completion.zsh.inc'; fi
 
+# The next line enables shell command completion for gcloud (system-wide setup).
+if [ -f '/usr/lib64/google-cloud-sdk/completion.zsh.inc' ]; then . '/usr/lib64/google-cloud-sdk/completion.zsh.inc'; fi
+
 ## EOF
