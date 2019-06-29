@@ -12,7 +12,7 @@ PATH=/sbin:/usr/sbin:$PATH
 manpath=(/usr/X11R6/man /usr/local/man /usr/share/man /usr/local/share/man /usr/man)
 export MANPATH
 # cdpath=(~)				# Search path for the cd command
-fpath=(~/.zsh/completion $fpath)	# Where to look for autoloaded function definitions
+fpath=(/usr/share/zsh/$ZSH_VERSION/functions $fpath)	# Where to look for autoloaded function definitions
 #hosts=(`hostname` 10.1.0.1 10.1.0.2 10.0.0.1)	# Hosts to use for completion (see later zstyle)
 
 # Some environment variables
