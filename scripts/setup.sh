@@ -232,7 +232,6 @@ except() {
 
     if (( ret )); then
         echo_err "ERROR ON LINE $LINENO in function ${fn:-NULL}"
-        exit $ret
     fi
 }
 

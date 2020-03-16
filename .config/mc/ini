@@ -102,18 +102,20 @@ editor_stop_format_chars=-+*\\,.;:&>
 
 skin=xoria256
 
+safe_overwrite=false
+
 [Layout]
-message_visible=0
-keybar_visible=0
-xterm_title=0
+message_visible=false
+keybar_visible=false
+xterm_title=false
 output_lines=0
-command_prompt=1
-menubar_visible=0
-free_space=1
-horizontal_split=0
-vertical_equal=1
+command_prompt=true
+menubar_visible=false
+free_space=true
+horizontal_split=false
+vertical_equal=true
 left_panel_size=80
-horizontal_equal=1
+horizontal_equal=true
 top_panel_size=20
 
 
