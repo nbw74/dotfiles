@@ -62,11 +62,11 @@ else
 endif " has("autocmd")
 
 if has("vim_starting")
-"   set foldenable
-"   set foldmethod=indent
+"     set foldenable
+"     set foldmethod=indent
 
     set mouse=n
-    set autochdir
+"     set autochdir
 endif
 
 " http://vim.wikia.com/wiki/Ignore_white_space_in_vimdiff
