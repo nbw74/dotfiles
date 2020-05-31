@@ -72,7 +72,7 @@ endif
 " http://vim.wikia.com/wiki/Ignore_white_space_in_vimdiff
 if &diff
     " diff mode
-    set diffopt+=iwhite
+"     set diffopt+=iwhite
     " http://stackoverflow.com/questions/1265410/is-there-a-way-to-configure-vimdiff-to-ignore-all-whitespaces
     set diffexpr=DiffW()
     function DiffW()
