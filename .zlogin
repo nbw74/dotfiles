@@ -9,10 +9,7 @@ then
     echo -e '\e[1;31m* DEGRADED MDRAID DETECTED!\e[0m'
 fi
 
-if command -v kubectl >/dev/null
-then
-    source <(kubectl completion zsh)
-fi
+[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
 
 local nodename=$(uname -n)
 local -i keyrun=0
