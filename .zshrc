@@ -734,6 +734,32 @@ VGExtend() {
     vgs
 }
 
+_Gcommand() {
+    emulate -L zsh
+    trap 'return $?' ERR
+
+    local GIT_MARK=""
+
+    GIT_MARK="${BR_MAGENTA}[${YELLOW}*${BR_MAGENTA}]${GREEN} "
+    echo "${GIT_MARK}${*}$CRESET"
+    $*
+}
+
+Gupdate() {
+    emulate -L zsh
+    trap return ERR
+
+    if [[ -z $1 ]]; then
+	echo "Usage: $0 <existing_git_branch>"
+	false
+    fi
+
+    _Gcommand git checkout master && \
+    _Gcommand git pull origin master && \
+    _Gcommand git checkout $1 && \
+    _Gcommand git rebase master
+}
+
 [[ -f "$BC_FILE" ]] && export BC_ENV_ARGS="-ql $BC_FILE"
 export LESS='-iMR -j5'
 export GREP_COLOR='1;32'
