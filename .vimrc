@@ -65,14 +65,14 @@ if has("vim_starting")
 "     set foldenable
 "     set foldmethod=indent
 
-    set mouse=n
+    set mouse=c
 "     set autochdir
 endif
 
 " http://vim.wikia.com/wiki/Ignore_white_space_in_vimdiff
 if &diff
     " diff mode
-"     set diffopt+=iwhite
+    set diffopt+=iwhite
     " http://stackoverflow.com/questions/1265410/is-there-a-way-to-configure-vimdiff-to-ignore-all-whitespaces
     set diffexpr=DiffW()
     function DiffW()
@@ -100,7 +100,7 @@ endif
 set t_ut=
 " For Ansible YAML syntax plugin
 " let g:ansible_options = {'ignore_blank_lines': 0}
-let g:ansible_unindent_after_newline = 1
+let g:ansible_unindent_after_newline = 0
 let g:ansible_extra_keywords_highlight = 1
 let g:ansible_name_highlight = 'd'
 
@@ -236,8 +236,8 @@ if has("gui_running")
     "				Dark: darkblue, desert, inkpot, jellybeans, moria
     "				Bright: default, peachpuff, zellner
     colorscheme desert
-    set lines=36
-    set columns=156
+    set lines=50
+    set columns=200
     set guifont=DejaVu\ Sans\ Mono\ 10
     set guioptions=acegit
 else

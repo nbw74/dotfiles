@@ -18,7 +18,7 @@
 	url = https://github.com/junegunn/gv.vim.git
 [submodule ".vim/bundle/toggle-bool"]
 	path = .vim/bundle/toggle-bool
-	url = https://github.com/sagarrakshe/toggle-bool
+	url = https://github.com/XPhyro/toggle-bool
 [submodule ".vim/bundle/ansible-vim"]
 	path = .vim/bundle/ansible-vim
 	url = https://github.com/pearofducks/ansible-vim
