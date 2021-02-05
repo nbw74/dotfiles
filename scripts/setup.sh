@@ -6,7 +6,8 @@ set -E
 set -o nounset
 
 # DEFAULTS BEGIN
-OPT_SUBMODULES=0
+typeset -i OPT_SUBMODULES=0 OPT_NO_PKG=0
+typeset OPT_ENV_COLOR="" SUDO=""
 # DEFAULTS END
 
 # CONFIGURATION BEGIN
@@ -23,6 +24,10 @@ main() {
     local fn=${FUNCNAME[0]}
 
     trap 'except $LINENO' ERR
+
+    if (( UID )); then
+	SUDO=sudo
+    fi
 
     pkginstall
 
@@ -89,6 +94,10 @@ pkginstall() {
     local fn=${FUNCNAME[0]}
     typeset -i redhat_distribution_major_version=0
 
+    if (( OPT_NO_PKG )); then
+	return
+    fi
+
     if [[ -r /etc/redhat-release ]]; then
         redhat_distribution_major_version=$(awk '{ match($0,"[.0-9]+",a) } END { print int(a[0]) }' /etc/redhat-release)
     fi
@@ -96,9 +105,9 @@ pkginstall() {
     if [[ ! -f /bin/zsh ]]; then
         echo_info "Installing packages..."
         if (( redhat_distribution_major_version >= 21 )); then
-            sudo dnf install "${packages[@]}"
+            $SUDO dnf install "${packages[@]}"
         elif (( redhat_distribution_major_version > 0 )); then
-            sudo yum install "${packages[@]}" "${packages_legacy[@]}"
+            $SUDO yum install "${packages[@]}" "${packages_legacy[@]}"
         fi
     fi
 }
@@ -158,12 +167,12 @@ attr() {
 
     if command -v systemctl >/dev/null
     then
-	if sudo systemd-detect-virt -q
+	if $SUDO systemd-detect-virt -q
 	then
 	    is_virtualized=1
 	fi
     else
-	if [[ -n "$(sudo virt-what)" ]]; then
+	if [[ -n "$($SUDO virt-what)" ]]; then
 	    is_virtualized=1
 	fi
     fi
@@ -176,35 +185,39 @@ attr() {
 	color_r=RED
     fi
 
-    PS3="Please specify the environment for colorization hostname in the prompt: "
+    if [[ -z $OPT_ENV_COLOR ]]; then
 
-    select env in production development testing auxiliary localhost
-    do
-	case $env in
-	    production)
-		color_e=RED
-		break
-		;;
-	    development)
-		color_e=GREEN
-		break
-		;;
-	    testing)
-		color_e=YELLOW
-		break
-		;;
-	    auxiliary)
-		color_e=BLUE
-		break
-		;;
-	    localhost)
-		color_e=MAGENTA
-		break
-		;;
-	    *)
-		echo_warn "Please try again."
-	esac
-    done
+	PS3="Please specify the environment for colorization hostname in the prompt: "
+
+	select env in production development testing auxiliary localhost
+	do
+	    case $env in
+		production)
+		    color_e=RED
+		    break
+		    ;;
+		development)
+		    color_e=GREEN
+		    break
+		    ;;
+		testing)
+		    color_e=YELLOW
+		    break
+		    ;;
+		auxiliary)
+		    color_e=BLUE
+		    break
+		    ;;
+		localhost)
+		    color_e=MAGENTA
+		    break
+		    ;;
+		*)
+		    echo_warn "Please try again."
+	    esac
+	done
+
+    fi
 
     cd "$HOME" || false
 
@@ -214,7 +227,7 @@ PR_USER=\$PR_BR_$color_u
 # Root user color (phy=RED, virt=YELLOW)
 PR_ROOT=\$PR_BR_$color_r
 # Hostname color (production=RED, testing=GREEN, staging=YELLOW, auxiliary=BLUE, localhost=MAGENTA)
-PR_HOST=\$PR_BR_$color_e
+PR_HOST=\$PR_BR_${color_e:-$OPT_ENV_COLOR}
 EOF
 }
 
@@ -236,7 +249,7 @@ except() {
 }
 
 readonly C_RST="tput sgr0"
-readonly C_RED="tput setaf 1"
+# readonly C_RED="tput setaf 1"
 readonly C_GREEN="tput setaf 2"
 readonly C_YELLOW="tput setaf 3"
 readonly C_BLUE="tput setaf 4"
@@ -263,7 +276,9 @@ unset TEMP
 
 while true; do
     case $1 in
+	-e|--env-color)		OPT_ENV_COLOR=$2 ;	shift 2	;;
 	-s|--submodules)	OPT_SUBMODULES=1 ;	shift	;;
+	-P|--no-packages)	OPT_NO_PKG=1 ;	shift	;;
 	-h|--help)		usage ;		exit 0	;;
 	--)			shift ;		break	;;
 	*)			usage ;		exit 1
