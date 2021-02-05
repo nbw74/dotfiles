@@ -265,7 +265,7 @@ echo_ok() { $C_GREEN; echo "* OK" 1>&2; $C_RST; }
 # Getopts
 getopt -T; (( $? == 4 )) || { echo "incompatible getopt version" >&2; exit 4; }
 
-if ! TEMP=$(getopt -o sh --longoptions submodules,help -n "$bn" -- "$@")
+if ! TEMP=$(getopt -o e:sPh --longoptions env-color:,submodules,no-packages,help -n "$bn" -- "$@")
 then
     echo "Terminating..." >&2
     exit 1
