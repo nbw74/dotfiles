@@ -25,3 +25,6 @@
 [submodule ".vim/bundle/indentLine"]
 	path = .vim/bundle/indentLine
 	url = https://github.com/Yggdroot/indentLine.git
+[submodule ".vim/bundle/mustache"]
+	path = .vim/bundle/mustache
+	url = https://github.com/mustache/vim-mustache-handlebars.git
