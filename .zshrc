@@ -299,8 +299,6 @@ setopt correct
 #      If  the  argument  to  a  cd command (or an implied cd with the AUTO_CD option set) is not a directory, and does not
 #      begin with a slash, try to expand the expression as if it were preceded by a ‘~’)
 setopt cdablevars
-#      Do not require a leading ‘.’ in a filename to be matched explicitly.
-setopt globdots
 #      Have pushd with no arguments act like ‘pushd $HOME’.
 setopt pushdtohome
 #      Automatically list choices on an ambiguous completion.

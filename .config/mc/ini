@@ -104,6 +104,8 @@ skin=xoria256
 
 safe_overwrite=false
 
+shadows=true
+
 [Layout]
 message_visible=false
 keybar_visible=false
@@ -114,7 +116,7 @@ menubar_visible=false
 free_space=true
 horizontal_split=false
 vertical_equal=true
-left_panel_size=80
+left_panel_size=114
 horizontal_equal=true
 top_panel_size=20
 

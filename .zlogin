@@ -11,6 +11,8 @@ fi
 
 [ $commands[kubectl] ] && source <(kubectl completion zsh)
 
+[[ -x /usr/local/go/bin/go ]] && export PATH=$PATH:/usr/local/go/bin
+
 local nodename=$(uname -n)
 local -i keyrun=0
 local -a keylist

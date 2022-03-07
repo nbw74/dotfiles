@@ -191,22 +191,23 @@ nnoremap <leader><space>	:nohls<cr>
 " ADVANCED COMMENTS BEGIN
 " csym here is variable which contains comment symbol, like `#' or `"'
 " Comment line(s)
-map <leader>c		:exe "s/^/".csym." /"<CR> :nohls<CR>
+map <leader>c		:exe "s!^!".csym." !"<CR> :nohls<CR>
 vmap <leader>c		:call VisComment(csym)<CR>
 " Uncomment line(s)
-map <leader>u		:exe "s/^".csym." //"<CR> :nohls<CR>
+map <leader>u		:exe "s!^".csym." !!"<CR> :nohls<CR>
 vmap <leader>u		:call VisUncomment(csym)<CR>
 
 fun! VisComment(c)
-  exe "s/^/".a:c." /"
+  exe "s!^!".a:c." !"
 endfunction
 
 fun! VisUncomment(c)
-  exe "s/^".a:c." //"
+  exe "s!^".a:c." !!"
 endfunction
 
 " Set `csym' according to file type
 au! BufNewFile,BufRead * let csym="#"
+au! BufNewFile,BufRead *.go let csym="//"
 au! BufNewFile,BufRead *.pp let csym="//"
 au! BufNewFile,BufRead *.cpp let csym="//"
 au! BufNewFile,BufRead *.php let csym="//"
