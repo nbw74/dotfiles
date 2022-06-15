@@ -187,10 +187,11 @@ alias mdstat='cat /proc/mdstat'
 alias ...='cd ../../'
 alias ....='cd ../../../'
 # git
-alias gpl='git pull'
-alias gps='git push'
 alias gcm='git commit -m'
 alias gco='git checkout'
+alias gds='git --no-pager diff --staged'
+alias gpl='git pull'
+alias gps='git push'
 alias gst='git status'
 
 if (( redhat_distribution_major_version >= 21 )); then
@@ -205,6 +206,7 @@ if (( redhat_distribution_major_version >= 21 )); then
 elif (( redhat_distribution_major_version > 0 )); then
     salias ys="yum search"
     salias yi="yum install"
+    salias yiy="yum install -y"
     salias yli="yum localinstall"
     salias ylin="yum localinstall --nogpgcheck"
     salias ye="yum erase"
@@ -789,7 +791,7 @@ else
 %(!.${PR_ROOT}.${PR_USER})%n${PR_RESET}@${PR_HOST}%M${PR_RESET} ${PR_BR_BLUE}%2~\
 ${PR_RESET}%1(j.${PR_BR_RED}.)%#${PR_RESET} ${vcs_info_msg_0_:-}'
     RPROMPT=''
-    SPROMPT=' ${PR_UL}Товарищ!${PR_RESET} Исправить ${PR_UL}'%R$'${PR_RESET} на ${PR_BOLD}'%r$'${PR_RESET}? ([y]да [${PR_UL}n${PR_RESET}]нет [a]пошёл на хуй [e]сам исправлю) _ '
+    SPROMPT=' Correct ${PR_BOLD}'%R$'${PR_RESET} to ${PR_BOLD}'%r$'${PR_RESET}? ([y]es [${PR_BOLD}n${PR_RESET}]o [a]bort [e]dit) _ '
 fi
 
 local -i NOHL=0
@@ -809,15 +811,5 @@ if (( ! NOHL )); then
     # ZSH_HIGHLIGHT_PATTERNS+=('(group|host|hostgroup|hbacrule|hbacsvc|hbactest|krbtpolicy|passwd|pwpolicy|service|show|user)-' 'fg=white')
     #
 fi
-
-# gcloud
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/nbw/google-cloud-sdk/path.zsh.inc' ]; then . '/home/nbw/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/home/nbw/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/nbw/google-cloud-sdk/completion.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud (system-wide setup).
-if [ -f '/usr/lib64/google-cloud-sdk/completion.zsh.inc' ]; then . '/usr/lib64/google-cloud-sdk/completion.zsh.inc'; fi
 
 ## EOF
