@@ -19,7 +19,7 @@ fpath=(~/.zsh/completion /usr/share/zsh/$ZSH_VERSION/functions $fpath)	# Where t
 # export MAIL=/var/spool/mail/$USERNAME
 # export HELPDIR=/usr/local/lib/zsh/help  # directory for run-help function to find docs
 # MAILCHECK=300
-DIRSTACKSIZE=20
+DIRSTACKSIZE=50
 watch=(notme)                   # watch for everybody but me
 LOGCHECK=300                    # check every 5 min for login/logout activity
 WATCHFMT='%n %a %l from %m at %t.'
@@ -189,7 +189,8 @@ alias ....='cd ../../../'
 # git
 alias gcm='git commit -m'
 alias gco='git checkout'
-alias gds='git --no-pager diff --staged'
+alias gds='git --no-pager diff --color --staged'
+alias gdw='git --no-pager diff --color'
 alias gpl='git pull'
 alias gps='git push'
 alias gst='git status'
@@ -215,7 +216,7 @@ elif (( redhat_distribution_major_version > 0 )); then
 fi
 #
 local -i a=0
-for a in {1..20}
+for a in {1..${DIRSTACKSIZE}}
 do
     alias $a="cd -$a"
 done
@@ -261,6 +262,8 @@ alias -g NC='| grep -Pv "(^$|^\s+$|^#|^\s+#|^;)"'
 alias -g P='-t "sudo -Es /usr/local/bin/eos -m passwd -u"'
 alias -g ENC='| bzip2 -9 | base64 -w0'
 alias -g GI='| grep -F Image:'
+alias -g i='grep -F'
+alias -g ii='grep -FIr'
 # Informational aliases
 alias info_openvz='echo -e "* if('''is_running''') {\n\e[1;33m\troot\e[0m;\n} elif('''is_not_running''') {\n\e[1;34m\tprivate\e[0m;\n}"'
 alias info_colors='for i in {0..8} ; do printf "\x1b[0;38;5;${i}mcolour${i}\t\x1b[1;38;5;${i}mcolour${i}\n"; done'
@@ -646,8 +649,8 @@ ssl-cert-fingerprints() {
         printf 'usage: ssl-cert-fingerprints <file>\n'
         return 1
     fi
-    for i in ${ssl_hashes}
-        do ssl-cert-$i $1;
+    for item in ${ssl_hashes}
+        do ssl-cert-$item $1;
     done
 }
 #g#
