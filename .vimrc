@@ -14,25 +14,15 @@ endif
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
-" How to let vim listchar work under not utf8 environment?
-" http://superuser.com/questions/556915/how-to-let-vim-listchar-work-under-not-utf8-environment
-scriptencoding utf-8
-
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
-
-set showcmd		" display incomplete commands
-set showmode
-set incsearch		" do incremental searching
-
-" Don't use Ex mode, use Q for formatting
-map Q gq
-
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if &t_Co > 2 || has("gui_running")
   syntax on
   set hlsearch
+endif
+
+if v:version > 700
+    execute pathogen#infect()
 endif
 
 " Only do this part when compiled with support for autocommands.
@@ -43,6 +33,11 @@ if has("autocmd")
   " 'cindent' is on in C files, etc.
   " Also load indent files, to automatically do language-dependent indenting.
   filetype plugin indent on
+  set omnifunc=syntaxcomplete#Complete
+
+  " ansible-doc -t module --list | awk '{ print $1 }' > ~/.vim/words/yaml.ansible.txt
+  " ansible-doc -t lookup --list | awk '{ print $1 }' >> ~/.vim/words/yaml.ansible.txt
+  au FileType * execute 'setlocal dict+=~/.vim/words/'.&filetype.'.txt'
 
   " Put these in an autocmd group, so that we can delete them easily.
   augroup vimrcEx
@@ -72,7 +67,8 @@ endif
 " http://vim.wikia.com/wiki/Ignore_white_space_in_vimdiff
 if &diff
     " diff mode
-    " set diffopt+=iwhite
+    set diffopt+=iwhite
+    colorscheme inkpot
     " http://stackoverflow.com/questions/1265410/is-there-a-way-to-configure-vimdiff-to-ignore-all-whitespaces
     set diffexpr=DiffW()
     function DiffW()
@@ -86,8 +82,6 @@ if &diff
      silent execute "!diff -a --binary " . opt .
        \ v:fname_in . " " . v:fname_new .  " > " . v:fname_out
     endfunction
-
-    colorscheme inkpot
 endif
 " http://objectmix.com/editors/762830-vim-6-3-listchars.html
 if v:version < 700
@@ -100,13 +94,42 @@ endif
 set t_ut=
 " For Ansible YAML syntax plugin
 " let g:ansible_options = {'ignore_blank_lines': 0}
-let g:ansible_unindent_after_newline = 0
+" let g:ansible_unindent_after_newline = 0
 let g:ansible_extra_keywords_highlight = 1
 let g:ansible_name_highlight = 'd'
+let g:ansible_attribute_highlight = "od"
+
+let g:SuperTabMappingForward = '<s-tab>'
+let g:SuperTabMappingBackward = '<tab>'
+
+autocmd FileType *
+  \ if &omnifunc != '' |
+  \   call SuperTabChain(&omnifunc, "<c-p>") |
+  \ endif
+"
+" allow backspacing over everything in insert mode
+set backspace=indent,eol,start
+
+set showcmd		" display incomplete commands
+set showmode
+set incsearch		" do incremental searching
 
 set list						" обеспечение listchars
 set linebreak						" переносить строки по словам
 set number						" отображение номеров строк
+
+set iskeyword+=-
+" autocmd Filetype yaml.ansible setlocal iskeyword+=.
+
+set complete+=k
+
+" https://superuser.com/questions/783149/how-can-i-construct-a-vim-mapping-to-perform-ctrl-n-but-as-if-iskeyword-include
+function! CustomComplete(type)
+    set iskeyword+=.
+    return a:type
+endfunction
+inoremap <expr> <C-b> CustomComplete("<C-x><C-k>")
+autocmd CompleteDone * set iskeyword-=.
 
 set encoding=utf-8					" текущая кодировка
 set termencoding=utf-8					" кодировка терминала
@@ -132,7 +155,7 @@ set noexpandtab
 set nowrap
 set scrolloff=3						" Try to show at least three lines 
 set sidescrolloff=2					" and two columns of context when scrolling
-set statusline=\ \ %f\ %1*%m%*\ %R%=\'%F\'\ %4l(%p%%):%c\ 0x%2B\ %y,%{&encoding}\ 
+set statusline=\ \ %f\ %1*%m%*\ %R%=\'%F\'\ %4l(%p%%):%c\ 0x%2B\ %y%{FugitiveStatusline()}\ %{winnr()}\ 
 set laststatus=2					" строка статуса всегда видима
 set virtualedit=block					" [ insert | all ]
 set history=2048
@@ -177,14 +200,17 @@ nnoremap <leader>p	:set invpaste paste?<CR>
 noremap <leader>b	:ToggleBool<CR>
 
 " Read mode
-nmap <leader>r		:set nolist<CR>:set wrap<CR>:set nonumber<CR>
-nmap <leader>R		:set list<CR>:set nowrap<CR>:set number<CR>
+" nmap <leader>r		:set nolist<CR>:set wrap<CR>:set nonumber<CR>
+" nmap <leader>R		:set list<CR>:set nowrap<CR>:set number<CR>
 " переназначаем клавишу Y на более логичное действие (moolenaar сам это советует)
 map Y y$
 
+" Don't use Ex mode, use Q for formatting
+map Q gq
+
 " Next/prev buffer
-nmap <leader>l		:bn<CR>
-nmap <leader>h		:bp<CR>
+" nmap <leader>l		:bn<CR>
+" nmap <leader>h		:bp<CR>
 " Clear search highlight
 nnoremap <leader><space>	:nohls<cr>
 
@@ -228,10 +254,6 @@ let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 " gv	выделить заново
 " :ls	просмотреть текущие буферы
 
-if v:version > 700
-    execute pathogen#infect()
-endif
-
 if has("gui_running")
     " nice schemes for GUI:
     "				Dark: darkblue, desert, inkpot, jellybeans, moria
@@ -258,5 +280,14 @@ else
 	colorscheme murphy
     endif
 endif
+
+" Call Neomake when writing a buffer (delay 750 ms).
+call neomake#configure#automake('rw', 1250, 750)
+nmap <leader>f		:lfirst<CR>
+nmap <leader>l		:llast<CR>
+
+" Call ansible-doc on K (for modules) and L (for lookups)
+nmap K	:setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible-212/bin/activate && ansible-doc -t module <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
+nmap L	:setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible-212/bin/activate && ansible-doc -t lookup <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
 
 " EOF

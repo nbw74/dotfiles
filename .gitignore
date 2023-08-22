@@ -1,3 +1,4 @@
+.gitconfig
 *.retry
 .config/mc/panels.ini
 .vim/.netrwhist
