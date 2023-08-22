@@ -179,7 +179,43 @@ alias cp='nocorrect cp'			# no spelling correction on cp
 alias mv='nocorrect mv'			# no spelling correction on mv
 alias mkdir='nocorrect mkdir'		# no spelling correction on mkdir
 alias j=jobs
-alias d='dirs -v'
+
+#####
+# DIRS STACK
+#
+UUID=$(uuidgen -mn @dns -N $(hostname -s))
+
+d() {
+    dirs -v
+    bk /tmp/dirs.$UUID
+    dirs > /tmp/dirs.$UUID
+}
+
+rename_func() {
+    if (( $# != 2 )); then
+        echo "Usage: rename_func <oldname> <newname>" >&2
+        return 1
+    fi
+    oldname=$1
+    newname=$2
+    local code=$(echo "$newname () {"; whence -f $oldname | tail -n +2)
+    unset -f $oldname
+    eval "$code"
+}
+
+dload() {
+    emulate -L zsh
+
+    rename_func chpwd chpwd_bak
+
+    for dir in $(tac /tmp/dirs.$UUID); do
+	eval cd "$dir"
+    done
+
+    rename_func chpwd_bak chpwd
+}
+#####
+
 alias h=history
 alias dicker=docker
 #g#
@@ -195,7 +231,7 @@ alias gpl='git pull'
 alias gps='git push'
 alias gst='git status'
 
-if (( redhat_distribution_major_version >= 21 )); then
+if (( redhat_distribution_major_version >= 8 )); then
     salias ds="dnf search"
     salias di="dnf install"
     salias de="dnf erase"
