@@ -5,6 +5,8 @@
 " System   : FreeBSD 6.2
 " Author   : nbw
 
+" :w !sudo tee %	запись через sudo
+
 " When started as "evim", evim.vim will already have done these settings.
 if v:progname =~? "evim"
   finish
@@ -54,7 +56,7 @@ if has("autocmd")
   augroup END
 else
   set autoindent			" always set autoindenting on
-endif " has("autocmd")
+endif
 
 if has("vim_starting")
 "     set foldenable
@@ -128,7 +130,7 @@ function! CustomComplete(type)
     set iskeyword+=.
     return a:type
 endfunction
-inoremap <expr> <C-b> CustomComplete("<C-x><C-k>")
+inoremap <expr> <C-B> CustomComplete("<C-P>")
 autocmd CompleteDone * set iskeyword-=.
 
 set encoding=utf-8					" текущая кодировка
@@ -247,22 +249,33 @@ command Greview :Git! diff --staged
 " indentLine
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 
-" Notes
-
-" :w !sudo tee %	запись через sudo
-" o	редактировать выделение
-" gv	выделить заново
-" :ls	просмотреть текущие буферы
+map <F2> :w<CR>
+imap <F2> <Esc>:w<CR>
 
 if has("gui_running")
-    " nice schemes for GUI:
-    "				Dark: darkblue, desert, inkpot, jellybeans, moria
-    "				Bright: default, peachpuff, zellner
-    colorscheme desert
-    set lines=50
-    set columns=200
-    set guifont=DejaVu\ Sans\ Mono\ 10
-    set guioptions=acegit
+  " nice schemes for GUI:
+  "				Dark: darkblue, desert, inkpot, jellybeans, moria
+  "				Bright: default, peachpuff, zellner
+  colorscheme bronzage
+  set lines=50
+  set columns=200
+  set guifont=DejaVu\ Sans\ Mono\ 10
+  set guioptions=acgi
+  " https://vi.stackexchange.com/questions/10962/how-to-change-color-of-tabs-in-the-tab-bar-in-gvim
+  hi TabLine guifg=#ffffcc guibg=#006699 gui=underline
+  hi TabLineSel guifg=#ffffff guibg=#996666 gui=bold
+  hi TabLineFill guifg=#2dbd1e guibg=#003366
+
+  nmap <M-1> 1gt
+  nmap <M-2> 2gt
+  nmap <M-3> 3gt
+  nmap <M-4> 4gt
+  nmap <M-5> 5gt
+  nmap <M-6> 6gt
+  nmap <M-7> 7gt
+  nmap <M-8> 8gt
+  nmap <M-9> 9gt
+  nmap <M-0> 10gt
 else
 "     if strftime("%H") < 10
 "         colorscheme jellybeans
@@ -289,5 +302,6 @@ nmap <leader>l		:llast<CR>
 " Call ansible-doc on K (for modules) and L (for lookups)
 nmap K	:setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible-212/bin/activate && ansible-doc -t module <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
 nmap L	:setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible-212/bin/activate && ansible-doc -t lookup <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
+nmap H	:setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible-212/bin/activate && ansible-doc -t keyword <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
 
 " EOF
