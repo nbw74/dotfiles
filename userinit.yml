@@ -1,7 +1,7 @@
 ---
 - name: USERINIT
   hosts: all
-  become: no
+  become: false
   vars:
     username: "nbw"
 
@@ -16,7 +16,7 @@
         name: "{{ username }}"
         password: "{{ password|default('$6$Y.LDrxWV$auqKxSczZHRpT//DpZ2PAEi7G7gWodmmQJCj7WS060REkqRzSN.Lxn5cENZl7lsGuCquX9TgqVj/JrXQ75HS2/') }}"
         groups: wheel
-        append: yes
+        append: true
 
     - name: Key
       authorized_key:
@@ -29,20 +29,19 @@
         path: "/etc/sudoers"
         regexp: '^(Defaults\s+always_set_home)'
         line: '# \1'
-        backrefs: yes
+        backrefs: true
 
     - name: SUDO_2
       lineinfile:
         path: "/etc/sudoers"
         regexp: '(%wheel\s+ALL=\(ALL\)\s+ALL)'
         line: '# \1'
-        backrefs: yes
+        backrefs: true
 
     - name: SUDO_3
       lineinfile:
         path: "/etc/sudoers"
         regexp: '#.*(%wheel\s+ALL=\(ALL\)\s+NOPASSWD: ALL)'
         line: '\1'
-        backrefs: yes
-
+        backrefs: true
 ...

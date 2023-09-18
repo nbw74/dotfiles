@@ -37,22 +37,29 @@ if has("autocmd")
   filetype plugin indent on
   set omnifunc=syntaxcomplete#Complete
 
+  autocmd FileType *
+    \ if &omnifunc != '' |
+    \   call SuperTabChain(&omnifunc, "<c-p>") |
+    \ endif
+
+  " https://vi.stackexchange.com/questions/10962/how-to-change-color-of-tabs-in-the-tab-bar-in-gvim
+  " augroup customTabs
+  "   autocmd FileType * hi TabLine guifg=#ffffcc guibg=#006699 gui=underline
+  "   autocmd FileType * hi TabLineSel guifg=#ffffff guibg=#996666 gui=bold
+  "   autocmd FileType * hi TabLineFill guifg=#2dbd1e guibg=#003366
+  " augroup END
+
   " ansible-doc -t module --list | awk '{ print $1 }' > ~/.vim/words/yaml.ansible.txt
   " ansible-doc -t lookup --list | awk '{ print $1 }' >> ~/.vim/words/yaml.ansible.txt
   au FileType * execute 'setlocal dict+=~/.vim/words/'.&filetype.'.txt'
 
-  " Put these in an autocmd group, so that we can delete them easily.
-  augroup vimrcEx
-    au!
-    " For all text files set 'textwidth' to 78 characters.
-    autocmd FileType text setlocal textwidth=78
-    " When editing a file, always jump to the last known cursor position.
-    " Don't do it when the position is invalid or when inside an event handler
-    " (happens when dropping a file on gvim).
-    autocmd BufReadPost *
-      \ if line("'\"") > 0 && line("'\"") <= line("$") |
-      \   exe "normal g`\"" |
-      \ endif
+  augroup ansibleDoc
+    autocmd FileType yaml.ansible nmap K :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible-212/bin/activate && ansible-doc -t module <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
+    autocmd FileType yaml.ansible nmap L :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible-212/bin/activate && ansible-doc -t lookup <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
+    autocmd FileType yaml.ansible nmap H :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible-212/bin/activate && ansible-doc -t keyword <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
+
+    autocmd FileType yaml.ansible command! AnsibleLintFile term bash -c "source ~/venv-ansible-212/bin/activate && ansible-lint --offline --force-color -c ~/ansible-lint.yml %:p"
+    autocmd FileType yaml.ansible command! AnsibleLintProj term bash -c "source ~/venv-ansible-212/bin/activate && ansible-lint --offline --force-color -c ~/ansible-lint.yml --project-dir `pwd`"
   augroup END
 else
   set autoindent			" always set autoindenting on
@@ -103,11 +110,6 @@ let g:ansible_attribute_highlight = "od"
 
 let g:SuperTabMappingForward = '<s-tab>'
 let g:SuperTabMappingBackward = '<tab>'
-
-autocmd FileType *
-  \ if &omnifunc != '' |
-  \   call SuperTabChain(&omnifunc, "<c-p>") |
-  \ endif
 "
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
@@ -121,8 +123,6 @@ set linebreak						" переносить строки по словам
 set number						" отображение номеров строк
 
 set iskeyword+=-
-" autocmd Filetype yaml.ansible setlocal iskeyword+=.
-
 set complete+=k
 
 " https://superuser.com/questions/783149/how-can-i-construct-a-vim-mapping-to-perform-ctrl-n-but-as-if-iskeyword-include
@@ -157,10 +157,10 @@ set noexpandtab
 set nowrap
 set scrolloff=3						" Try to show at least three lines 
 set sidescrolloff=2					" and two columns of context when scrolling
-set statusline=\ \ %f\ %1*%m%*\ %R%=\'%F\'\ %4l(%p%%):%c\ 0x%2B\ %y%{FugitiveStatusline()}\ %{winnr()}\ 
+set statusline=\ %{FugitiveStatusline()}\ %f\ %1*%m%*\ %R%=\'%F\'\ %4l(%p%%):%c\ 0x%2B\ %y\ %{winnr()}\ 
 set laststatus=2					" строка статуса всегда видима
 set virtualedit=block					" [ insert | all ]
-set history=2048
+set history=10000
 set ttyfast
 
 set wildmenu
@@ -201,9 +201,6 @@ nnoremap <leader>p	:set invpaste paste?<CR>
 " ToggleBool
 noremap <leader>b	:ToggleBool<CR>
 
-" Read mode
-" nmap <leader>r		:set nolist<CR>:set wrap<CR>:set nonumber<CR>
-" nmap <leader>R		:set list<CR>:set nowrap<CR>:set number<CR>
 " переназначаем клавишу Y на более логичное действие (moolenaar сам это советует)
 map Y y$
 
@@ -214,7 +211,7 @@ map Q gq
 " nmap <leader>l		:bn<CR>
 " nmap <leader>h		:bp<CR>
 " Clear search highlight
-nnoremap <leader><space>	:nohls<cr>
+nnoremap <leader><space>	:nohls<CR>
 
 " ADVANCED COMMENTS BEGIN
 " csym here is variable which contains comment symbol, like `#' or `"'
@@ -224,6 +221,15 @@ vmap <leader>c		:call VisComment(csym)<CR>
 " Uncomment line(s)
 map <leader>u		:exe "s!^".csym." !!"<CR> :nohls<CR>
 vmap <leader>u		:call VisUncomment(csym)<CR>
+
+" Copy full file path in unnamed buffer
+map <leader>[		:let @" = expand("%:p")<CR>
+map <leader>]		:let @* = expand("%:p")<CR>
+
+" Call Neomake when writing a buffer (delay 750 ms).
+call neomake#configure#automake('rw', 1250, 750)
+nmap <leader>f		:lfirst<CR>
+nmap <leader>l		:llast<CR>
 
 fun! VisComment(c)
   exe "s!^!".a:c." !"
@@ -245,7 +251,9 @@ au! BufNewFile,BufRead .vimrc let csym="\""
 " ADVANCED COMMENTS END
 
 " vim-fugitive "addon"
-command Greview :Git! diff --staged
+command Gxlog term git log --graph --oneline --all --decorate=full --date-order --color=always
+command -nargs=1 Gwdiff term git diff --word-diff=color <args>
+command Greview term git diff --staged
 " indentLine
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 
@@ -256,15 +264,15 @@ if has("gui_running")
   " nice schemes for GUI:
   "				Dark: darkblue, desert, inkpot, jellybeans, moria
   "				Bright: default, peachpuff, zellner
-  colorscheme bronzage
+  let g:lucius_style = "dark"
+  let g:sierra_Sunset = 1
+  colorscheme lucius
+
   set lines=50
   set columns=200
-  set guifont=DejaVu\ Sans\ Mono\ 10
+  " set guifont=DejaVu\ Sans\ Mono\ 10
+  set guifont=Fira\ Mono\ 10
   set guioptions=acgi
-  " https://vi.stackexchange.com/questions/10962/how-to-change-color-of-tabs-in-the-tab-bar-in-gvim
-  hi TabLine guifg=#ffffcc guibg=#006699 gui=underline
-  hi TabLineSel guifg=#ffffff guibg=#996666 gui=bold
-  hi TabLineFill guifg=#2dbd1e guibg=#003366
 
   nmap <M-1> 1gt
   nmap <M-2> 2gt
@@ -293,15 +301,5 @@ else
 	colorscheme murphy
     endif
 endif
-
-" Call Neomake when writing a buffer (delay 750 ms).
-call neomake#configure#automake('rw', 1250, 750)
-nmap <leader>f		:lfirst<CR>
-nmap <leader>l		:llast<CR>
-
-" Call ansible-doc on K (for modules) and L (for lookups)
-nmap K	:setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible-212/bin/activate && ansible-doc -t module <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
-nmap L	:setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible-212/bin/activate && ansible-doc -t lookup <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
-nmap H	:setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible-212/bin/activate && ansible-doc -t keyword <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
 
 " EOF
