@@ -39,7 +39,7 @@ if has("autocmd")
 
   autocmd FileType *
     \ if &omnifunc != '' |
-    \   call SuperTabChain(&omnifunc, "<c-p>") |
+    \   call SuperTabChain(&omnifunc, "<c-x><c-u>") |
     \ endif
 
   " https://vi.stackexchange.com/questions/10962/how-to-change-color-of-tabs-in-the-tab-bar-in-gvim
@@ -57,9 +57,6 @@ if has("autocmd")
     autocmd FileType yaml.ansible nmap K :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible-212/bin/activate && ansible-doc -t module <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
     autocmd FileType yaml.ansible nmap L :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible-212/bin/activate && ansible-doc -t lookup <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
     autocmd FileType yaml.ansible nmap H :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible-212/bin/activate && ansible-doc -t keyword <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
-
-    autocmd FileType yaml.ansible command! AnsibleLintFile term bash -c "source ~/venv-ansible-212/bin/activate && ansible-lint --offline --force-color -c ~/ansible-lint.yml %:p"
-    autocmd FileType yaml.ansible command! AnsibleLintProj term bash -c "source ~/venv-ansible-212/bin/activate && ansible-lint --offline --force-color -c ~/ansible-lint.yml --project-dir `pwd`"
   augroup END
 else
   set autoindent			" always set autoindenting on
@@ -254,6 +251,9 @@ au! BufNewFile,BufRead .vimrc let csym="\""
 command Gxlog term git log --graph --oneline --all --decorate=full --date-order --color=always
 command -nargs=1 Gwdiff term git diff --word-diff=color <args>
 command Greview term git diff --staged
+
+command AnsibleLintFile term bash -c "source ~/venv-ansible-212/bin/activate && ANSIBLE_COLLECTIONS_PATH=/home/nbw/projects/sb:/home/nbw/.ansible/collections ansible-lint --offline --force-color -c ~/ansible-lint.yml %:p"
+command AnsibleLintProj term bash -c "source ~/venv-ansible-212/bin/activate && ANSIBLE_COLLECTIONS_PATH=/home/nbw/projects/sb:/home/nbw/.ansible/collections ansible-lint --offline --force-color -c ~/ansible-lint.yml --project-dir `pwd`"
 " indentLine
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 
