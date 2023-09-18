@@ -166,6 +166,47 @@ else
     let s:no_term_bg = 0
 endif
 
+" ============================================================================
+" Terminal Colors:
+" ============================================================================
+
+let s:colors = {
+\  'black': '#000000',
+\  'blue': '#66ccff',
+\  'green': '#99cc00',
+\  'lgreen': '#dfeacc',
+\  'red': '#cc3e28',
+\  'grey': '#777777',
+\  'dgrey': '#555555',
+\  'lgrey1': '#d8d5c7',
+\  'lgrey2': '#bfbcaf',
+\  'lgrey3': '#aaaaaa',
+\  'yellow': '#b58900',
+\  'lyellow': '#f2de91',
+\  'orange': '#a55000',
+\  'purple': '#9999ff',
+\  'white': '#ffffff',
+\  'cyan': '#33ffff'
+\ }
+
+let g:terminal_ansi_colors = [
+\   s:colors['black'],
+\   s:colors['red'],
+\   s:colors['green'],
+\   s:colors['yellow'],
+\   s:colors['blue'],
+\   s:colors['purple'],
+\   s:colors['cyan'],
+\   s:colors['lgrey3'],
+\   s:colors['dgrey'],
+\   s:colors['red'],
+\   s:colors['green'],
+\   s:colors['yellow'],
+\   s:colors['blue'],
+\   s:colors['purple'],
+\   s:colors['cyan'],
+\   s:colors['lgrey3']
+\ ]
 
 " ============================================================================
 " Color Map:

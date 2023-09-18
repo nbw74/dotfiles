@@ -31,3 +31,6 @@
 [submodule ".vim/bundle/enunch"]
 	path = .vim/bundle/enunch
 	url = https://github.com/tpope/vim-eunuch.git
+[submodule ".vim/bundle/Colorizer"]
+	path = .vim/bundle/Colorizer
+	url = https://github.com/chrisbra/Colorizer.git
