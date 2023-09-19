@@ -39,7 +39,7 @@ if has("autocmd")
 
   autocmd FileType *
     \ if &omnifunc != '' |
-    \   call SuperTabChain(&omnifunc, "<c-x><c-u>") |
+    \   call SuperTabChain(&omnifunc, "<c-p>") |
     \ endif
 
   " https://vi.stackexchange.com/questions/10962/how-to-change-color-of-tabs-in-the-tab-bar-in-gvim
