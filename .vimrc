@@ -118,6 +118,7 @@ set incsearch		" do incremental searching
 set list						" обеспечение listchars
 set linebreak						" переносить строки по словам
 set number						" отображение номеров строк
+set nrformats=alpha,hex,bin,unsigned
 
 set iskeyword+=-
 set complete+=k
