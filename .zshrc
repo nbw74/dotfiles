@@ -827,7 +827,7 @@ if [[ -n $MC_SID ]]; then
     SPROMPT=
 else
     PROMPT='%(?.${PR_RESET}.${PR_RED})%?${PR_RESET} \
-%(!.${PR_ROOT}.${PR_USER})%L${PR_RESET}@${PR_HOST}%l${PR_RESET} ${PR_BR_BLUE}%2~\
+%(!.${PR_ROOT}.${PR_USER})%n${PR_RESET}@${PR_HOST}%M${PR_RESET} ${PR_BR_BLUE}%2~\
 ${PR_RESET}%1(j.${PR_BR_RED}.)%#${PR_RESET} ${vcs_info_msg_0_:-}'
     RPROMPT=''
     SPROMPT=' Correct ${PR_BOLD}'%R$'${PR_RESET} to ${PR_BOLD}'%r$'${PR_RESET}? ([y]es [${PR_BOLD}n${PR_RESET}]o [a]bort [e]dit) _ '
@@ -850,5 +850,11 @@ if (( ! NOHL )); then
     # ZSH_HIGHLIGHT_PATTERNS+=('(group|host|hostgroup|hbacrule|hbacsvc|hbactest|krbtpolicy|passwd|pwpolicy|service|show|user)-' 'fg=white')
     #
 fi
+
+# The next line updates PATH for Yandex Cloud CLI.
+if [ -f '/home/nbw/yandex-cloud/path.bash.inc' ]; then source '/home/nbw/yandex-cloud/path.bash.inc'; fi
+
+# The next line enables shell command completion for yc.
+if [ -f '/home/nbw/yandex-cloud/completion.zsh.inc' ]; then source '/home/nbw/yandex-cloud/completion.zsh.inc'; fi
 
 ## EOF

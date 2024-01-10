@@ -152,6 +152,7 @@ set shiftwidth=4
 set softtabstop=4
 set noexpandtab
 
+set confirm
 set nowrap
 set scrolloff=3						" Try to show at least three lines 
 set sidescrolloff=2					" and two columns of context when scrolling
@@ -253,8 +254,8 @@ command Gxlog term git log --graph --oneline --all --decorate=full --date-order 
 command -nargs=1 Gwdiff term git diff --word-diff=color <args>
 command Greview term git diff --staged
 
-command AnsibleLintFile term bash -c "source ~/venv-ansible-212/bin/activate && ANSIBLE_COLLECTIONS_PATH=/home/nbw/projects/sb:/home/nbw/.ansible/collections ansible-lint --offline --force-color -c ~/ansible-lint.yml %:p"
-command AnsibleLintProj term bash -c "source ~/venv-ansible-212/bin/activate && ANSIBLE_COLLECTIONS_PATH=/home/nbw/projects/sb:/home/nbw/.ansible/collections ansible-lint --offline --force-color -c ~/ansible-lint.yml --project-dir `pwd`"
+command AnsibleLintFile term bash -c "source ${HOME}/venv-ansible-212/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ANSIBLE_COLLECTIONS_PATH=${HOME}/projects/sb:${HOME}/.ansible/collections ansible-lint --offline --force-color -c ${HOME}/ansible-lint.yml %:p"
+command AnsibleLintProj term bash -c "source ${HOME}/venv-ansible-212/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ANSIBLE_COLLECTIONS_PATH=${HOME}/projects/sb:${HOME}/.ansible/collections ansible-lint --offline --force-color -c ${HOME}/ansible-lint.yml --project-dir `pwd`"
 " indentLine
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 
