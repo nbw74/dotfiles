@@ -183,37 +183,41 @@ alias j=jobs
 #####
 # DIRS STACK
 #
-UUID=$(uuidgen -mn @dns -N $(hostname -s))
+if [[ -f /etc/fedora-release ]]; then
+    UUID=$(uuidgen -mn @dns -N $(hostname -s))
 
-d() {
-    dirs -v
-    bk /tmp/dirs.$UUID
-    dirs > /tmp/dirs.$UUID
-}
+    d() {
+	dirs -v
+	bk /tmp/dirs.$UUID
+	dirs > /tmp/dirs.$UUID
+    }
 
-rename_func() {
-    if (( $# != 2 )); then
-        echo "Usage: rename_func <oldname> <newname>" >&2
-        return 1
-    fi
-    oldname=$1
-    newname=$2
-    local code=$(echo "$newname () {"; whence -f $oldname | tail -n +2)
-    unset -f $oldname
-    eval "$code"
-}
+    rename_func() {
+	if (( $# != 2 )); then
+	    echo "Usage: rename_func <oldname> <newname>" >&2
+	    return 1
+	fi
+	oldname=$1
+	newname=$2
+	local code=$(echo "$newname () {"; whence -f $oldname | tail -n +2)
+	unset -f $oldname
+	eval "$code"
+    }
 
-dload() {
-    emulate -L zsh
+    dload() {
+	emulate -L zsh
 
-    rename_func chpwd chpwd_bak
+	rename_func chpwd chpwd_bak
 
-    for dir in $(tac /tmp/dirs.$UUID); do
-	eval cd "$dir"
-    done
+	for dir in $(tac /tmp/dirs.$UUID); do
+	    eval cd "$dir"
+	done
 
-    rename_func chpwd_bak chpwd
-}
+	rename_func chpwd_bak chpwd
+    }
+else
+    alias d='dirs -v'
+fi
 #####
 
 alias h=history

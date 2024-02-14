@@ -118,7 +118,10 @@ set incsearch		" do incremental searching
 set list						" обеспечение listchars
 set linebreak						" переносить строки по словам
 set number						" отображение номеров строк
-set nrformats=alpha,hex,bin,unsigned
+
+if v:version > 800
+    set nrformats=alpha,hex,bin,unsigned
+endif
 
 set iskeyword+=-
 set complete+=k
@@ -130,6 +133,9 @@ function! CustomComplete(type)
 endfunction
 inoremap <expr> <C-B> CustomComplete("<C-P>")
 autocmd CompleteDone * set iskeyword-=.
+
+" Disable some commands; https://vi.stackexchange.com/questions/25152/how-can-i-discourage-myself-from-using-q-wq-etc-to-quit-vim
+cnoremap <expr> <CR> getcmdtype() == ":" && index(["qa", "qa!"], getcmdline()) >= 0 ? "<C-u>" : "<CR>"
 
 set encoding=utf-8					" текущая кодировка
 set termencoding=utf-8					" кодировка терминала
@@ -226,7 +232,10 @@ map <leader>[		:let @" = expand("%:p")<CR>
 map <leader>]		:let @* = expand("%:p")<CR>
 
 " Call Neomake when writing a buffer (delay 750 ms).
-call neomake#configure#automake('rw', 1250, 750)
+if filereadable(expand("~/.vim/bundle/neomake/README.md"))
+  call neomake#configure#automake('rw', 1250, 750)
+endif
+
 nmap <leader>f		:lfirst<CR>
 nmap <leader>l		:llast<CR>
 
@@ -254,8 +263,8 @@ command Gxlog term git log --graph --oneline --all --decorate=full --date-order 
 command -nargs=1 Gwdiff term git diff --word-diff=color <args>
 command Greview term git diff --staged
 
-command AnsibleLintFile term bash -c "source ${HOME}/venv-ansible-212/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ANSIBLE_COLLECTIONS_PATH=${HOME}/projects/sb:${HOME}/.ansible/collections ansible-lint --offline --force-color -c ${HOME}/ansible-lint.yml %:p"
-command AnsibleLintProj term bash -c "source ${HOME}/venv-ansible-212/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ANSIBLE_COLLECTIONS_PATH=${HOME}/projects/sb:${HOME}/.ansible/collections ansible-lint --offline --force-color -c ${HOME}/ansible-lint.yml --project-dir `pwd`"
+command AnsibleLintFile term bash -c "source ${HOME}/venv-ansible-212/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ~/.config/ansible-lint.yaml %:p"
+command AnsibleLintProj term bash -c "source ${HOME}/venv-ansible-212/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ~/.config/ansible-lint.yaml --project-dir `pwd`"
 " indentLine
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 
