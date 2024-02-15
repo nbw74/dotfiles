@@ -843,8 +843,12 @@ if (( debian_distribution_major_version && debian_distribution_major_version <= 
     NOHL=1
 fi
 
+if [[ ! -f "${HOME}/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
+    NOHL=1
+fi
+
 if (( ! NOHL )); then
-    source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    source "${HOME}/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
     ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
     ZSH_HIGHLIGHT_STYLES[path]='fg=none,underline'
