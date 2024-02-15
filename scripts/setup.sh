@@ -6,7 +6,7 @@ set -E
 set -o nounset
 
 # DEFAULTS BEGIN
-typeset -i OPT_SUBMODULES=0 OPT_MIN_SUBMODULES=0 OPT_NO_PKG=0
+typeset -i OPT_SUBMODULES=0 OPT_NO_PKG=0
 typeset OPT_ENV_COLOR=""
 # DEFAULTS END
 
@@ -61,13 +61,6 @@ submodules() {
 
     cd "${HOME}/.dotfiles" || false
 
-    if (( OPT_MIN_SUBMODULES )); then
-	if [[ ! -f .gitmodules.max ]]; then
-	    cp -v .gitmodules .gitmodules.max
-	    cp -v .gitmodules.min .gitmodules
-	fi
-    fi
-
     submodules_list=$(git submodule status)
 
     if [[ -z $submodules_list ]]; then
@@ -85,7 +78,7 @@ submodules() {
         fi
 
         echo_info "Git submodule update ${Sub[1]}"
-        git submodule update "${Sub[1]}"
+        git submodule update --depth 1 --single-branch "${Sub[1]}"
 
         unset Sub
     done
@@ -269,7 +262,7 @@ echo_ok() { $C_GREEN; echo "* OK" 1>&2; $C_RST; }
 # Getopts
 getopt -T; (( $? == 4 )) || { echo "incompatible getopt version" >&2; exit 4; }
 
-if ! TEMP=$(getopt -o e:smPh --longoptions env-color:,submodules,min-submodules,no-packages,help -n "$bn" -- "$@")
+if ! TEMP=$(getopt -o e:sPh --longoptions env-color:,submodules,no-packages,help -n "$bn" -- "$@")
 then
     echo "Terminating..." >&2
     exit 1
@@ -282,7 +275,6 @@ while true; do
     case $1 in
 	-e|--env-color)		OPT_ENV_COLOR=$2 ;	shift 2	;;
 	-s|--submodules)	OPT_SUBMODULES=1 ;	shift	;;
-	-m|--min-submodules)	OPT_MIN_SUBMODULES=1 ;	shift	;;
 	-P|--no-packages)	OPT_NO_PKG=1 ;	shift	;;
 	-h|--help)		usage ;		exit 0	;;
 	--)			shift ;		break	;;

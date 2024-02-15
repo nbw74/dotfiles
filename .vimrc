@@ -37,10 +37,15 @@ if has("autocmd")
   filetype plugin indent on
   set omnifunc=syntaxcomplete#Complete
 
-  autocmd FileType *
-    \ if &omnifunc != '' |
-    \   call SuperTabChain(&omnifunc, "<c-p>") |
-    \ endif
+  if filereadable(expand("~/.vim/bundle/supertab/README.rst"))
+    autocmd FileType *
+      \ if &omnifunc != '' |
+      \   call SuperTabChain(&omnifunc, "<c-p>") |
+      \ endif
+
+    let g:SuperTabMappingForward = '<s-tab>'
+    let g:SuperTabMappingBackward = '<tab>'
+  endif
 
   " https://vi.stackexchange.com/questions/10962/how-to-change-color-of-tabs-in-the-tab-bar-in-gvim
   " augroup customTabs
@@ -104,9 +109,6 @@ set t_ut=
 let g:ansible_extra_keywords_highlight = 1
 let g:ansible_name_highlight = 'd'
 let g:ansible_attribute_highlight = "od"
-
-let g:SuperTabMappingForward = '<s-tab>'
-let g:SuperTabMappingBackward = '<tab>'
 "
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
