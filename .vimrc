@@ -145,9 +145,9 @@ set keymap=russian-jcukenwin				" русская языка (второй спо
 set iminsert=0						" --"--
 set imsearch=0						" --"--
 
-set directory=~/.tmp
+set directory=~/.vim/tmp
 set backup		" keep a backup file
-set backupdir=~/.tmp
+set backupdir=~/.vim/tmp
 
 set smartcase
 set autoindent
@@ -162,7 +162,13 @@ set confirm
 set nowrap
 set scrolloff=3						" Try to show at least three lines 
 set sidescrolloff=2					" and two columns of context when scrolling
-set statusline=\ %{FugitiveStatusline()}\ %f\ %1*%m%*\ %R%=\'%F\'\ %4l(%p%%):%c\ 0x%2B\ %y\ %{winnr()}\ 
+
+if filereadable(expand("~/.vim/bundle/vim-fugitive/README.markdown"))
+  set statusline=\ %{FugitiveStatusline()}\ %f\ %1*%m%*\ %R%=\'%F\'\ %4l(%p%%):%c\ 0x%2B\ %y\ %{winnr()}\ 
+else
+  set statusline=\ \ %f\ %1*%m%*\ %R%=\'%F\'\ %4l(%p%%):%c\ 0x%2B\ %y,%{&encoding}\ 
+endif
+
 set laststatus=2					" строка статуса всегда видима
 set virtualedit=block					" [ insert | all ]
 set history=10000
@@ -259,12 +265,16 @@ au! BufNewFile,BufRead .vimrc let csym="\""
 " ADVANCED COMMENTS END
 
 " vim-fugitive "addon"
-command Gxlog term git log --graph --oneline --all --decorate=full --date-order --color=always
-command -nargs=1 Gwdiff term git diff --word-diff=color <args>
-command Greview term git diff --staged
+if filereadable(expand("~/.vim/bundle/vim-fugitive/README.markdown"))
+  command Gxlog term git log --graph --oneline --all --decorate=full --date-order --color=always
+  command -nargs=1 Gwdiff term git diff --word-diff=color <args>
+  command Greview term git diff --staged
+endif
 
-command AnsibleLintFile term bash -c "source ${HOME}/venv-ansible-212/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ~/.config/ansible-lint.yaml %:p"
-command AnsibleLintProj term bash -c "source ${HOME}/venv-ansible-212/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ~/.config/ansible-lint.yaml --project-dir `pwd`"
+if filereadable(expand("~/venv/ansible-212/bin/activate"))
+  command AnsibleLintFile term bash -c "source ${HOME}/venv/ansible-212/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ~/.config/ansible-lint.yaml %:p"
+  command AnsibleLintProj term bash -c "source ${HOME}/venv/ansible-212/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ~/.config/ansible-lint.yaml --project-dir `pwd`"
+endif
 " indentLine
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 

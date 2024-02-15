@@ -6,18 +6,19 @@ set -E
 set -o nounset
 
 # DEFAULTS BEGIN
-typeset -i OPT_SUBMODULES=0 OPT_NO_PKG=0
-typeset OPT_ENV_COLOR="" SUDO=""
+typeset -i OPT_SUBMODULES=0 OPT_MIN_SUBMODULES=0 OPT_NO_PKG=0
+typeset OPT_ENV_COLOR=""
 # DEFAULTS END
 
 # CONFIGURATION BEGIN
 typeset -a base=( ".gitconfig" ".tmux.conf" ".vim" ".vimrc" ".zlogin" ".zlogout" ".zsh" ".zshrc" )
-typeset mcdir=".config/mc"
-typeset mcini="ini"
-typeset -a dirs=( ".tmp" "$mcdir" )
+typeset -a dirs=( ".vim/tmp" )
 typeset -a packages=( "zsh" "vim" "tree" )
 typeset -a packages_legacy=( "virt-what" )
-typeset bn="$(basename "$0")"
+
+typeset bn=""
+bn="$(basename "$0")"
+readonly bn
 # CONFIGURATION END
 
 main() {
@@ -25,8 +26,10 @@ main() {
 
     trap 'except $LINENO' ERR
 
+    local _sudo=""
+
     if (( UID )); then
-	SUDO=sudo
+	_sudo=sudo
     fi
 
     pkginstall
@@ -48,7 +51,7 @@ dotup() {
 
     cd "$HOME/.dotfiles" || false
 
-    echo_info "git pull on .dotfiles"
+    echo_info "Git pull on .dotfiles"
     git pull
 }
 
@@ -57,6 +60,13 @@ submodules() {
     local submodules_list=""
 
     cd "${HOME}/.dotfiles" || false
+
+    if (( OPT_MIN_SUBMODULES )); then
+	if [[ ! -f .gitmodules.max ]]; then
+	    cp -v .gitmodules .gitmodules.max
+	    cp -v .gitmodules.min .gitmodules
+	fi
+    fi
 
     submodules_list=$(git submodule status)
 
@@ -70,21 +80,21 @@ submodules() {
         read -r -a Sub <<< "$line"
 
         if [[ ${Sub[0]} =~ -.* ]]; then
-            echo_info "git submodule init ${Sub[1]}"
+            echo_info "Git submodule init ${Sub[1]}"
             git submodule init "${Sub[1]}"
         fi
 
-        echo_info "git submodule update ${Sub[1]}"
+        echo_info "Git submodule update ${Sub[1]}"
         git submodule update "${Sub[1]}"
 
         unset Sub
     done
 
-    echo_info "Pull for all submodules:"
+#     echo_info "Pull for all submodules:"
 #     git submodule foreach "(git checkout master; git pull)"
-    git pull --recurse-submodules
+#     git pull --recurse-submodules
 
-    if [[ -d ${HOME}/.dotfiles/.vim/bundle/nerdtree-git-plugin ]]; then
+    if [[ -d "${HOME}/.dotfiles/.vim/bundle/nerdtree-git-plugin" ]]; then
         rm -rf "${HOME}/.dotfiles/.vim/bundle/nerdtree-git-plugin"
     fi
 
@@ -92,7 +102,7 @@ submodules() {
 
 pkginstall() {
     local fn=${FUNCNAME[0]}
-    typeset -i redhat_distribution_major_version=0
+    local -i redhat_distribution_major_version=0
 
     if (( OPT_NO_PKG )); then
 	return
@@ -104,10 +114,10 @@ pkginstall() {
 
     if [[ ! -f /bin/zsh ]]; then
         echo_info "Installing packages..."
-        if (( redhat_distribution_major_version >= 21 )); then
-            $SUDO dnf install "${packages[@]}"
+        if (( redhat_distribution_major_version >= 8 )); then
+            $_sudo dnf install "${packages[@]}"
         elif (( redhat_distribution_major_version > 0 )); then
-            $SUDO yum install "${packages[@]}" "${packages_legacy[@]}"
+            $_sudo yum install "${packages[@]}" "${packages_legacy[@]}"
         fi
     fi
 }
@@ -120,7 +130,7 @@ lnk() {
 
     touch .viminfo
 
-    for f in ${base[*]}; do
+    for f in "${base[@]}"; do
         if [[ -f "$f" ]]; then
             if head "$f" | grep -Fqi 'pinned'; then
                 pinned=1
@@ -130,7 +140,7 @@ lnk() {
         if (( ! pinned )); then
             if [[ ! -h $f ]]; then
                 if [[ -e $f ]]; then
-                    mv "$f" "${f}-$(shuf -i 1000-9999 -n 1).bak"
+                    mv -iv "$f" "${f}-$(shuf -i 1000-9999 -n 1).bak"
                 fi
 
                 echo_info_ln "ln -s $f"
@@ -141,19 +151,13 @@ lnk() {
         pinned=0
     done
 
-    for d in ${dirs[*]}; do
+    for d in "${dirs[@]}"; do
         if [[ ! -d $d ]]; then
             mkdir -p "$d"
         fi
     done
 
-    cd "${HOME}/$mcdir" || false
-    if [[ ! -h $mcini ]]; then
-        echo_info_ln "ln -sf $mcini"
-        ln -sf ../../.dotfiles/${mcdir}/$mcini $mcini
-    fi
     cd "$HOME" || false
-
 }
 
 attr() {
@@ -161,18 +165,18 @@ attr() {
     local attrfile=".prompt.attr"
     local -i is_virtualized=0
 
-    if [[ -f /etc/bash.attr || -f $attrfile ]]; then
+    if [[ -f /etc/bash.attr || -f "$attrfile" ]]; then
 	return
     fi
 
     if command -v systemctl >/dev/null
     then
-	if $SUDO systemd-detect-virt -q
+	if $_sudo systemd-detect-virt -q
 	then
 	    is_virtualized=1
 	fi
     else
-	if [[ -n "$($SUDO virt-what)" ]]; then
+	if [[ -n "$($_sudo virt-what)" ]]; then
 	    is_virtualized=1
 	fi
     fi
@@ -265,7 +269,7 @@ echo_ok() { $C_GREEN; echo "* OK" 1>&2; $C_RST; }
 # Getopts
 getopt -T; (( $? == 4 )) || { echo "incompatible getopt version" >&2; exit 4; }
 
-if ! TEMP=$(getopt -o e:sPh --longoptions env-color:,submodules,no-packages,help -n "$bn" -- "$@")
+if ! TEMP=$(getopt -o e:smPh --longoptions env-color:,submodules,min-submodules,no-packages,help -n "$bn" -- "$@")
 then
     echo "Terminating..." >&2
     exit 1
@@ -278,6 +282,7 @@ while true; do
     case $1 in
 	-e|--env-color)		OPT_ENV_COLOR=$2 ;	shift 2	;;
 	-s|--submodules)	OPT_SUBMODULES=1 ;	shift	;;
+	-m|--min-submodules)	OPT_MIN_SUBMODULES=1 ;	shift	;;
 	-P|--no-packages)	OPT_NO_PKG=1 ;	shift	;;
 	-h|--help)		usage ;		exit 0	;;
 	--)			shift ;		break	;;
