@@ -13,7 +13,7 @@ typeset OPT_ENV_COLOR=""
 # CONFIGURATION BEGIN
 typeset -a base=( ".gitconfig" ".tmux.conf" ".vim" ".vimrc" ".zlogin" ".zlogout" ".zsh" ".zshrc" )
 typeset -a dirs=( ".vim/tmp" )
-typeset -a packages=( "zsh" "vim" "tree" )
+typeset -a packages=( "zsh" "vim" "tree" "git" )
 typeset -a packages_legacy=( "virt-what" )
 
 typeset bn=""
@@ -78,7 +78,12 @@ submodules() {
         fi
 
         echo_info "Git submodule update ${Sub[1]}"
-        git submodule update --depth 1 --single-branch "${Sub[1]}"
+
+	if git submodule --help | grep -q single-branch; then
+	    git submodule update --depth 1 --single-branch "${Sub[1]}"
+	else
+	    git submodule update --depth 1 "${Sub[1]}"
+	fi
 
         unset Sub
     done
