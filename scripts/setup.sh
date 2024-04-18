@@ -112,7 +112,7 @@ pkginstall() {
 
     if [[ ! -f /bin/zsh ]]; then
         echo_info "Installing packages..."
-        if (( redhat_distribution_major_version >= 8 )); then
+        if (( redhat_distribution_major_version >= 7 )); then
             $_sudo dnf install "${packages[@]}"
         elif (( redhat_distribution_major_version > 0 )); then
             $_sudo yum install "${packages[@]}" "${packages_legacy[@]}"

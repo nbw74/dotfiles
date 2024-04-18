@@ -276,6 +276,8 @@ endif
 if filereadable(expand("~/venv/ansible-212/bin/activate"))
   command AnsibleLintFile term bash -c "source ${HOME}/venv/ansible-212/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ~/.config/ansible-lint.yaml %:p"
   command AnsibleLintProj term bash -c "source ${HOME}/venv/ansible-212/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ~/.config/ansible-lint.yaml --project-dir `pwd`"
+
+  command -nargs=1 BenderBuild term bash -c "source ${HOME}/venv/ansible-212/bin/activate && cd ${HOME}/projects/github/nbw74/antest && ansible-playbook -i inventory/hosts.yml -e flavour=<args> prepare.yml && ANSIBLE_FORCE_COLOR=true ANSIBLE_STDOUT_CALLBACK=yaml ansible-bender build build.yml"
 endif
 " indentLine
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
