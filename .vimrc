@@ -59,9 +59,9 @@ if has("autocmd")
   au FileType * execute 'setlocal dict+=~/.vim/words/'.&filetype.'.txt'
 
   augroup ansibleDoc
-    autocmd FileType yaml.ansible nmap K :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible-212/bin/activate && ansible-doc -t module <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
-    autocmd FileType yaml.ansible nmap L :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible-212/bin/activate && ansible-doc -t lookup <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
-    autocmd FileType yaml.ansible nmap H :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible-212/bin/activate && ansible-doc -t keyword <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
+    autocmd FileType yaml.ansible nmap K :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible/bin/activate && ansible-doc -t module <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
+    autocmd FileType yaml.ansible nmap L :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible/bin/activate && ansible-doc -t lookup <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
+    autocmd FileType yaml.ansible nmap H :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible/bin/activate && ansible-doc -t keyword <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
   augroup END
 else
   set autoindent			" always set autoindenting on
@@ -273,11 +273,13 @@ if filereadable(expand("~/.vim/bundle/vim-fugitive/README.markdown"))
   command Greview term git diff --staged
 endif
 
-if filereadable(expand("~/venv/ansible-212/bin/activate"))
-  command AnsibleLintFile term bash -c "source ${HOME}/venv/ansible-212/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ~/.config/ansible-lint.yaml %:p"
-  command AnsibleLintProj term bash -c "source ${HOME}/venv/ansible-212/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ~/.config/ansible-lint.yaml --project-dir `pwd`"
+if filereadable(expand("~/venv/ansible/bin/activate"))
+  command AnsibleLintFile term bash -c "source ${HOME}/venv/ansible/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ~/.config/ansible-lint.yaml %:p"
+  command AnsibleLintProj term bash -c "source ${HOME}/venv/ansible/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ~/.config/ansible-lint.yaml --project-dir `pwd`"
 
-  command -nargs=1 BenderBuild term bash -c "source ${HOME}/venv/ansible-212/bin/activate && cd ${HOME}/projects/github/nbw74/antest && ansible-playbook -i inventory/hosts.yml -e flavour=<args> prepare.yml && ANSIBLE_FORCE_COLOR=true ANSIBLE_STDOUT_CALLBACK=yaml ansible-bender build build.yml"
+  command -nargs=1 BenderBuild term bash -c "source ${HOME}/venv/ansible/bin/activate && cd ${HOME}/projects/github/nbw74/antest && ansible-playbook -i inventory/hosts.yml -e flavour=<args> prepare.yml && ANSIBLE_FORCE_COLOR=true ANSIBLE_STDOUT_CALLBACK=yaml ansible-bender build build.yml"
+
+  nmap <F1> :vert term bash -c "source ~/venv/ansible/bin/activate && cd .. && ~/projects/github/nbw74/antest/run.sh -N"<CR>
 endif
 " indentLine
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
