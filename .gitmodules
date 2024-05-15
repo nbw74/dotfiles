@@ -34,6 +34,3 @@
 [submodule ".vim/bundle/Colorizer"]
 	path = .vim/bundle/Colorizer
 	url = https://github.com/chrisbra/Colorizer.git
-[submodule ".vim/bundle/showmarks"]
-	path = .vim/bundle/showmarks
-	url = https://github.com/zakj/vim-showmarks.git
