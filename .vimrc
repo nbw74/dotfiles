@@ -59,9 +59,9 @@ if has("autocmd")
   au FileType * execute 'setlocal dict+=~/.vim/words/'.&filetype.'.txt'
 
   augroup ansibleDoc
-    autocmd FileType yaml.ansible nmap K :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible/bin/activate && ansible-doc -t module <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
-    autocmd FileType yaml.ansible nmap L :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible/bin/activate && ansible-doc -t lookup <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
-    autocmd FileType yaml.ansible nmap H :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv-ansible/bin/activate && ansible-doc -t keyword <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
+    autocmd FileType yaml.ansible nmap K :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv/ansible/bin/activate && ansible-doc -t module <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
+    autocmd FileType yaml.ansible nmap L :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv/ansible/bin/activate && ansible-doc -t lookup <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
+    autocmd FileType yaml.ansible nmap H :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv/ansible/bin/activate && ansible-doc -t keyword <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
   augroup END
 else
   set autoindent			" always set autoindenting on
@@ -109,7 +109,11 @@ set t_ut=
 let g:ansible_extra_keywords_highlight = 1
 let g:ansible_name_highlight = 'd'
 let g:ansible_attribute_highlight = "od"
-"
+" showmarks plugin
+" let g:showmarks_textlower = "'\t"
+" let g:showmarks_textupper = "\t "
+" let g:showmarks_textother = "\t~"
+
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
@@ -220,20 +224,8 @@ map Y y$
 " Don't use Ex mode, use Q for formatting
 map Q gq
 
-" Next/prev buffer
-" nmap <leader>l		:bn<CR>
-" nmap <leader>h		:bp<CR>
 " Clear search highlight
 nnoremap <leader><space>	:nohls<CR>
-
-" ADVANCED COMMENTS BEGIN
-" csym here is variable which contains comment symbol, like `#' or `"'
-" Comment line(s)
-map <leader>c		:exe "s!^!".csym." !"<CR> :nohls<CR>
-vmap <leader>c		:call VisComment(csym)<CR>
-" Uncomment line(s)
-map <leader>u		:exe "s!^".csym." !!"<CR> :nohls<CR>
-vmap <leader>u		:call VisUncomment(csym)<CR>
 
 " Copy full file path in unnamed buffer
 map <leader>[		:let @" = expand("%:p")<CR>
@@ -246,25 +238,10 @@ endif
 
 nmap <leader>f		:lfirst<CR>
 nmap <leader>l		:llast<CR>
-
-fun! VisComment(c)
-  exe "s!^!".a:c." !"
-endfunction
-
-fun! VisUncomment(c)
-  exe "s!^".a:c." !!"
-endfunction
-
-" Set `csym' according to file type
-au! BufNewFile,BufRead * let csym="#"
-au! BufNewFile,BufRead *.go let csym="//"
-au! BufNewFile,BufRead *.pp let csym="//"
-au! BufNewFile,BufRead *.cpp let csym="//"
-au! BufNewFile,BufRead *.php let csym="//"
-au! BufNewFile,BufRead *.c let csym="/*"
-au! BufNewFile,BufRead *.vim let csym="\""
-au! BufNewFile,BufRead .vimrc let csym="\""
-" ADVANCED COMMENTS END
+" marks https://vi.stackexchange.com/questions/8451/is-it-possible-to-have-vim-displaying-the-list-of-available-marks-when-using-mar
+nnoremap <leader>m	:<C-u>marks<CR>:normal!<Space>'
+nnoremap <leader>a	:ls<CR>:b<Space>
+nnoremap <leader>z	:undolist<CR>:u<Space>
 
 " vim-fugitive "addon"
 if filereadable(expand("~/.vim/bundle/vim-fugitive/README.markdown"))
@@ -279,7 +256,11 @@ if filereadable(expand("~/venv/ansible/bin/activate"))
 
   command -nargs=1 BenderBuild term bash -c "source ${HOME}/venv/ansible/bin/activate && cd ${HOME}/projects/github/nbw74/antest && ansible-playbook -i inventory/hosts.yml -e flavour=<args> prepare.yml && ANSIBLE_FORCE_COLOR=true ANSIBLE_STDOUT_CALLBACK=yaml ansible-bender build build.yml"
 
-  nmap <F1> :vert term bash -c "source ~/venv/ansible/bin/activate && cd .. && ~/projects/github/nbw74/antest/run.sh -N"<CR>
+  nmap <F1> :execute<CR>
+  nmap <F3> :term antest.sh -qN<CR>
+  nmap <F4> :term antest.sh -qs<CR>
+  nmap <F5> :vert term antest.sh -q<CR>
+  nmap <F8> :term antest.sh -qR<CR>
 endif
 " indentLine
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
@@ -294,6 +275,11 @@ if has("gui_running")
   let g:lucius_style = "dark"
   let g:sierra_Sunset = 1
   colorscheme lucius
+
+  autocmd FileType * hi ShowMarksHLl guifg=LightGoldenRod guibg=DarkSlateGray
+  autocmd FileType * hi ShowMarksHLu guifg=MediumPurple guibg=DarkSlateGray
+  autocmd FileType * hi ShowMarksHLo guifg=DarkSeaGreen guibg=DarkSlateGray
+  autocmd FileType * hi ShowMarksHLm guifg=IndianRed guibg=DarkSlateGray
 
   set lines=50
   set columns=200

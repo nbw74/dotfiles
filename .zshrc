@@ -805,7 +805,7 @@ Gupdate() {
 
 [[ -f "$BC_FILE" ]] && export BC_ENV_ARGS="-ql $BC_FILE"
 export LESS='-iMR -j5'
-export GREP_COLOR='1;32'
+export GREP_COLORS='mt=1;32'
 
 # Ищем файл описания раскраски приглашения
 if [[ -r "/etc/bash.attr" ]]; then
@@ -860,9 +860,9 @@ if (( ! NOHL )); then
 fi
 
 # The next line updates PATH for Yandex Cloud CLI.
-if [ -f '/home/nbw/yandex-cloud/path.bash.inc' ]; then source '/home/nbw/yandex-cloud/path.bash.inc'; fi
+# if [ -f '/home/nbw/yandex-cloud/path.bash.inc' ]; then source '/home/nbw/yandex-cloud/path.bash.inc'; fi
 
 # The next line enables shell command completion for yc.
-if [ -f '/home/nbw/yandex-cloud/completion.zsh.inc' ]; then source '/home/nbw/yandex-cloud/completion.zsh.inc'; fi
+# if [ -f '/home/nbw/yandex-cloud/completion.zsh.inc' ]; then source '/home/nbw/yandex-cloud/completion.zsh.inc'; fi
 
 ## EOF
