@@ -60,7 +60,6 @@ if has("autocmd")
 
   augroup ansibleDoc
     autocmd FileType yaml.ansible nmap K :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv/ansible/bin/activate && ansible-doc -t module <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
-    autocmd FileType yaml.ansible nmap L :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv/ansible/bin/activate && ansible-doc -t lookup <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
     autocmd FileType yaml.ansible nmap H :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv/ansible/bin/activate && ansible-doc -t keyword <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
   augroup END
 else
@@ -166,7 +165,7 @@ set noexpandtab
 
 set confirm
 set nowrap
-set scrolloff=3						" Try to show at least three lines 
+set scrolloff=999					" Place cursor to the center of a window
 set sidescrolloff=2					" and two columns of context when scrolling
 
 if filereadable(expand("~/.vim/bundle/vim-fugitive/README.markdown"))

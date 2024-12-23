@@ -24,6 +24,8 @@ watch=(notme)                   # watch for everybody but me
 LOGCHECK=300                    # check every 5 min for login/logout activity
 WATCHFMT='%n %a %l from %m at %t.'
 
+export PODMAN_IGNORE_CGROUPSV1_WARNING=true
+
 # TERM
 if [[ $(tty) =~ /dev/tty[0-9]* ]]; then
     export TERM='linux'
@@ -187,7 +189,7 @@ if [[ -f /etc/fedora-release ]]; then
     UUID=$(uuidgen -mn @dns -N $(hostname -s))
 
     d() {
-	dirs -v
+	dirs -v | sort -k2
 	bk /tmp/dirs.$UUID
 	dirs > /tmp/dirs.$UUID
     }
@@ -859,6 +861,14 @@ if (( ! NOHL )); then
     #
 fi
 
+export FZF_DEFAULT_OPTS='--bind "alt-j:down,alt-k:up"'
+
+s() {
+    local _ssh_group _ssh_host
+    _ssh_group=$(/usr/bin/ls -1 ~/.ssh/conf.d | fzf)
+    _ssh_host=$(awk '/^Host\ / { print $2 }' ~/.ssh/conf.d/$_ssh_group | fzf)
+    test -n "$_ssh_host" && ssh "$_ssh_host"
+}
 # The next line updates PATH for Yandex Cloud CLI.
 # if [ -f '/home/nbw/yandex-cloud/path.bash.inc' ]; then source '/home/nbw/yandex-cloud/path.bash.inc'; fi
 
