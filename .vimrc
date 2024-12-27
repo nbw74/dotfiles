@@ -47,6 +47,11 @@ if has("autocmd")
     let g:SuperTabMappingBackward = '<tab>'
   endif
 
+
+  if filereadable(expand("~/.vim/bundle/commentary/plugin/commentary.vim"))
+    autocmd FileType jinja2 setlocal commentstring=#\ %s
+  endif
+
   " https://vi.stackexchange.com/questions/10962/how-to-change-color-of-tabs-in-the-tab-bar-in-gvim
   " augroup customTabs
   "   autocmd FileType * hi TabLine guifg=#ffffcc guibg=#006699 gui=underline
@@ -314,4 +319,7 @@ else
     endif
 endif
 
+if filereadable(expand("~/.vim/local/globalmarks.vim"))
+  source <sfile>:h/.vim/local/globalmarks.vim
+endif
 " EOF
