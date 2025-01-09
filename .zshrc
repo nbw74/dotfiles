@@ -864,6 +864,12 @@ fi
 
 export FZF_DEFAULT_OPTS='--bind "alt-j:down,alt-k:up"'
 
+a() {
+    local _usr_local_bin
+    _usr_local_bin=$(/usr/bin/ls -1 /usr/local/bin | fzf)
+    test -n "$_usr_local_bin" && /usr/local/bin/$_usr_local_bin
+}
+
 s() {
     local _ssh_group _ssh_host
     _ssh_group=$(/usr/bin/ls -1 ~/.ssh/conf.d | fzf)
