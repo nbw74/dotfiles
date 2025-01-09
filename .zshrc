@@ -218,7 +218,9 @@ if [[ -f /etc/fedora-release ]]; then
 	rename_func chpwd_bak chpwd
     }
 else
-    alias d='dirs -v'
+    d() {
+	dirs -v
+    }
 fi
 #####
 
