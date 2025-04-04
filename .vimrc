@@ -50,6 +50,7 @@ if has("autocmd")
 
   if filereadable(expand("~/.vim/bundle/commentary/plugin/commentary.vim"))
     autocmd FileType jinja2 setlocal commentstring=#\ %s
+    autocmd FileType tf setlocal commentstring=#\ %s
   endif
 
   " https://vi.stackexchange.com/questions/10962/how-to-change-color-of-tabs-in-the-tab-bar-in-gvim
@@ -179,6 +180,12 @@ else
   set statusline=\ \ %f\ %1*%m%*\ %R%=\'%F\'\ %4l(%p%%):%c\ 0x%2B\ %y,%{&encoding}\ 
 endif
 
+" AG integration
+if filereadable("/usr/bin/ag")
+  set grepprg=ag\ --case-sensitive\ --vimgrep\ $*
+  set grepformat=%f:%l:%c:%m
+endif
+
 set laststatus=2					" строка статуса всегда видима
 set virtualedit=block					" [ insert | all ]
 set history=10000
@@ -255,10 +262,10 @@ if filereadable(expand("~/.vim/bundle/vim-fugitive/README.markdown"))
 endif
 
 if filereadable(expand("~/venv/ansible/bin/activate"))
-  command AnsibleLintFile term bash -c "source ${HOME}/venv/ansible/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ~/.config/ansible-lint.yaml %:p"
-  command AnsibleLintProj term bash -c "source ${HOME}/venv/ansible/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ~/.config/ansible-lint.yaml --project-dir `pwd`"
+  command AnsibleLintFile term bash -lc "source ${HOME}/venv/ansible/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ~/.config/ansible-lint.yaml %:p"
+  command AnsibleLintProj term bash -lc "source ${HOME}/venv/ansible/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ~/.config/ansible-lint.yaml --project-dir `pwd`"
 
-  command -nargs=1 BenderBuild term bash -c "source ${HOME}/venv/ansible/bin/activate && cd ${HOME}/projects/github/nbw74/antest && ansible-playbook -i inventory/hosts.yml -e flavour=<args> prepare.yml && ANSIBLE_FORCE_COLOR=true ANSIBLE_STDOUT_CALLBACK=yaml ansible-bender build build.yml"
+  command -nargs=1 BenderBuild term bash -lc "source ${HOME}/venv/ansible/bin/activate && cd ${HOME}/projects/github/nbw74/antest && ansible-playbook -i inventory/hosts.yml -e flavour=<args> prepare.yml && ansible-bender build build.yml"
 
   nmap <F1> :execute<CR>
   nmap <F3> :term antest.sh -qN<CR>
@@ -278,6 +285,7 @@ if has("gui_running")
   "				Bright: default, peachpuff, zellner
   let g:lucius_style = "dark"
   let g:sierra_Sunset = 1
+  let g:lucius_no_term_bg = 0
   colorscheme lucius
 
   autocmd FileType * hi ShowMarksHLl guifg=LightGoldenRod guibg=DarkSlateGray

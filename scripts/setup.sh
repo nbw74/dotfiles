@@ -113,9 +113,9 @@ pkginstall() {
     if [[ ! -f /bin/zsh ]]; then
         echo_info "Installing packages..."
         if (( redhat_distribution_major_version >= 8 )); then
-            $_sudo dnf install "${packages[@]}"
+            $_sudo dnf -y install "${packages[@]}"
         elif (( redhat_distribution_major_version > 0 )); then
-            $_sudo yum install "${packages[@]}" "${packages_legacy[@]}"
+            $_sudo yum -y install "${packages[@]}" "${packages_legacy[@]}"
         fi
     fi
 }
@@ -231,6 +231,22 @@ PR_ROOT=\$PR_BR_$color_r
 # Hostname color (production=RED, testing=GREEN, staging=YELLOW, auxiliary=BLUE, localhost=MAGENTA)
 PR_HOST=\$PR_BR_${color_e:-$OPT_ENV_COLOR}
 EOF
+}
+
+btop() {
+    local fn=${FUNCNAME[0]}
+
+    cd "$HOME" || false
+
+    if [[ -f ".config/btop/btop.conf" ]]; then
+	while read -r line; do
+	    sed -ri "s/^${line%% *}.*/${line}/" .config/btop/btop.conf
+	done < .dotfiles/.config/btop/btop.conf
+    else
+	mkdir -p .config/btop
+	touch .config/btop/btop.conf
+	cp .dotfiles/.config/btop/btop.conf .config/btop/btop.conf
+    fi
 }
 
 usage() {
