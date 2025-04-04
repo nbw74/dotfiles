@@ -15,6 +15,7 @@ typeset -a base=( ".gitconfig" ".tmux.conf" ".vim" ".vimrc" ".zlogin" ".zlogout"
 typeset -a dirs=( ".vim/tmp" )
 typeset -a packages=( "zsh" "vim" "tree" "git" )
 typeset -a packages_legacy=( "virt-what" )
+typeset -a packages_modern=( "btop" )
 
 typeset bn=""
 bn="$(basename "$0")"
@@ -42,6 +43,7 @@ main() {
 
     lnk
     attr
+    btop
 
     echo_ok
 }
@@ -113,7 +115,7 @@ pkginstall() {
     if [[ ! -f /bin/zsh ]]; then
         echo_info "Installing packages..."
         if (( redhat_distribution_major_version >= 8 )); then
-            $_sudo dnf -y install "${packages[@]}"
+            $_sudo dnf -y install "${packages[@]} "${packages_modern[@]}"
         elif (( redhat_distribution_major_version > 0 )); then
             $_sudo yum -y install "${packages[@]}" "${packages_legacy[@]}"
         fi
