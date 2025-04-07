@@ -242,7 +242,7 @@ btop() {
 
     if [[ -f ".config/btop/btop.conf" ]]; then
 	while read -r line; do
-	    sed -ri "s|^${line%% *}.*|${line}|" .config/btop/btop.conf
+	    sed -ri "s#^${line%% *}.*#${line}#" .config/btop/btop.conf
 	done < .dotfiles/.config/btop/btop.conf
     else
 	mkdir -p .config/btop
