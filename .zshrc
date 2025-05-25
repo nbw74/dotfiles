@@ -243,7 +243,8 @@ if (( redhat_distribution_major_version >= 8 )); then
     salias ds="dnf search"
     salias di="dnf install"
     salias diy="dnf install -y"
-    salias de="dnf erase"
+    salias de="dnf remove"
+    salias dr="dnf remove"
     salias up="dnf up"
     # Fallback
     salias ys="dnf search"

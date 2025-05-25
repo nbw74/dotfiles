@@ -62,11 +62,11 @@ if has("autocmd")
 
   " ansible-doc -t module --list | awk '{ print $1 }' > ~/.vim/words/yaml.ansible.txt
   " ansible-doc -t lookup --list | awk '{ print $1 }' >> ~/.vim/words/yaml.ansible.txt
+  " ansible-doc -t filter --list | awk '{ print $1 }' >> ~/.vim/words/yaml.ansible.txt
   au FileType * execute 'setlocal dict+=~/.vim/words/'.&filetype.'.txt'
 
   augroup ansibleDoc
-    autocmd FileType yaml.ansible nmap K :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv/ansible/bin/activate && ansible-doc -t module <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
-    autocmd FileType yaml.ansible nmap H :setlocal isk+=.<CR>:vnew \| 0read !. ~/venv/ansible/bin/activate && ansible-doc -t keyword <C-r><C-w><CR>:se ft=yaml.ansible<CR>:setglobal isk-=.<CR>
+    autocmd FileType yaml.ansible nmap K :AnsibleDocModule<CR>
   augroup END
 else
   set autoindent			" always set autoindenting on
@@ -262,10 +262,38 @@ if filereadable(expand("~/.vim/bundle/vim-fugitive/README.markdown"))
 endif
 
 if filereadable(expand("~/venv/ansible/bin/activate"))
-  command AnsibleLintFile term bash -lc "source ${HOME}/venv/ansible/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ~/.config/ansible-lint.yaml %:p"
-  command AnsibleLintProj term bash -lc "source ${HOME}/venv/ansible/bin/activate && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ~/.config/ansible-lint.yaml --project-dir `pwd`"
+  function! AnsibleDoc(type)
+    setlocal iskeyword+=.
+    let l:c_word = expand("<cword>")
+    echo a:type . "/" . l:c_word
+    vnew
+    execute '0read !. ${HOME}/venv/ansible/bin/activate && ANSIBLE_NOCOLOR=True ansible-doc -t ' . a:type . ' ' . l:c_word
+    setfiletype yaml.ansible
+    setlocal iskeyword-=.
+  endfunction
 
-  command -nargs=1 BenderBuild term bash -lc "source ${HOME}/venv/ansible/bin/activate && cd ${HOME}/projects/github/nbw74/antest && ansible-playbook -i inventory/hosts.yml -e flavour=<args> prepare.yml && ansible-bender build build.yml"
+  command! AnsibleDocFilter call AnsibleDoc("filter")
+  command! AnsibleDocLookup call AnsibleDoc("lookup")
+  command! AnsibleDocModule call AnsibleDoc("module")
+
+  command! AnsibleLintFile term bash -lc "source $ANSIBLE_VENV_PATH && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ${HOME}/.config/ansible-lint.yaml %:p"
+  command! AnsibleLintProj term bash -lc "source $ANSIBLE_VENV_PATH && rm -rf ${HOME}/.cache/ansible-compat && ansible-lint --offline --force-color --config-file ${HOME}/.config/ansible-lint.yaml --project-dir `pwd`"
+
+  function! AnsibleRunPlaybook(...) abort
+    if a:0 != 3
+      echohl WarningMsg
+      echom "Usage: :AnsibleRunPlaybook <ansible_user> <limit> <playbook>"
+      echohl None
+      return
+    endif
+
+    let ansible_run_playbook = 'term bash -lc "source $ANSIBLE_VENV_PATH && ansible-playbook -i $ANSIBLE_COMMON_INVENTORY -i % -u ' . shellescape(a:1) . ' -l ' . shellescape(a:2) . ' ' . shellescape(a:3) . '"'
+    execute ansible_run_playbook
+  endfunction
+
+  command! -nargs=* AnsibleRunPlaybook call AnsibleRunPlaybook(<f-args>)
+
+  command! -nargs=1 BenderBuild term bash -lc "source $ANSIBLE_VENV_PATH && cd ${HOME}/projects/github/nbw74/antest && ansible-playbook -i inventory/hosts.yml -e flavour=<args> prepare.yml && ansible-bender build build.yml"
 
   nmap <F1> :execute<CR>
   nmap <F3> :term antest.sh -qN<CR>
