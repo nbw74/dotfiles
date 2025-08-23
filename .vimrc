@@ -273,6 +273,7 @@ if filereadable(expand("~/venv/ansible/bin/activate"))
   endfunction
 
   command! AnsibleDocFilter call AnsibleDoc("filter")
+  command! AnsibleDocKeyword call AnsibleDoc("keyword")
   command! AnsibleDocLookup call AnsibleDoc("lookup")
   command! AnsibleDocModule call AnsibleDoc("module")
 
