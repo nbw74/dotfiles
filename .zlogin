@@ -13,7 +13,7 @@ fi
 
 [[ -x /usr/local/go/bin/go ]] && export PATH=$PATH:/usr/local/go/bin
 
-local nodename=$(uname -n)
+local nodename=$(hostname -s)
 local -i keyrun=0
 local -a keylist
 
@@ -24,24 +24,12 @@ elif [[ -n "$SSH_TTY" ]]; then
 fi
 
 case ${nodename%%\.*} in
-    nestor)
-	keylist=( id_dsa id_rsa )
-        ;;
-    admin1)
-	keylist=( id_dsa id_rsa id_ed25519 )
-        ;;
-    kino)
-	keylist=( id_rsa_wm id_ed25519 )
-        ;;
     fe04)
 	keylist=( id_rsa_fe04 id_ed25519 )
         ;;
-    vs88|mtdi-zabbix-proxy)
-	keylist=( id_rsa )
+    vs88)
+	keylist=( id_rsa id_ed25519 )
 	;;
-    knd-zbx-proxy)
-	keylist=( id_ed25519 )
-        ;;
     *)
 	keyrun=0
 esac
