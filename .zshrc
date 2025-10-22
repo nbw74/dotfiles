@@ -809,6 +809,10 @@ Gupdate() {
     _Gcommand git rebase master
 }
 
+ovpnlog() {
+    sudo grep CLIENT_LIST $1 | sed 's/\(CLIENT_LIST,\|HEADER,\)//g' | column -s, -t
+}
+
 [[ -f "$BC_FILE" ]] && export BC_ENV_ARGS="-ql $BC_FILE"
 export LESS='-iMR -j5'
 export GREP_COLORS='mt=1;32'
