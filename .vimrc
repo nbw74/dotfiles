@@ -220,8 +220,8 @@ menu Fenc.EOL:mac	:set ff=mac<CR>
 menu Hex.HEX		:%!xxd<CR>
 menu Hex.ASCII		:%!xxd -r<CR>
 
-nmap <leader>e		:e ++enc=cp1251<CR>
-nmap <leader>E		:e ++enc=utf-8<CR>
+" nmap <leader>e		:e ++enc=cp1251<CR>
+" nmap <leader>E		:e ++enc=utf-8<CR>
 
 " Paste mode
 nnoremap <leader>p	:set invpaste paste?<CR>
@@ -295,6 +295,9 @@ if filereadable(expand("~/venv/ansible/bin/activate"))
   command! -nargs=* AnsibleRunPlaybook call AnsibleRunPlaybook(<f-args>)
 
   command! -nargs=1 BenderBuild term bash -lc "source $ANSIBLE_VENV_PATH && cd ${HOME}/projects/github/nbw74/antest && ansible-playbook -i inventory/hosts.yml -e flavour=<args> prepare.yml && ansible-bender build build.yml"
+
+  command! YqEval vert term bash -lc "yq eval . %"
+  command! YamlPy vert term bash -lc "cat % | python3 -c 'import yaml, json, sys; print(json.dumps(yaml.safe_load(sys.stdin)))' | jq -C"
 
   nmap <F1> :execute<CR>
   nmap <F3> :term antest.sh -qN<CR>

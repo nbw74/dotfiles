@@ -279,7 +279,7 @@ unset lsgdf
 # ls -l с цифровым видом прав
 alias lsd="ls -l | sed -e 's/--x/1/g' -e 's/-w-/2/g' -e 's/-wx/3/g' -e 's/r--/4/g'  -e 's/r-x/5/g' -e 's/rw-/6/g' -e 's/rwx/7/g' -e 's/---/0/g'"
 alias tree='tree -FqC'
-alias df='df -PTh'
+alias df='df -PTh -x tmpfs -x devtmpfs -x efivarfs'
 #g#a2# Remove current empty directory. Execute \kbd{cd ..; rmdir \$OLDCWD}
 alias rmcdir='cd ..; rmdir $OLDPWD || cd $OLDPWD'
 
@@ -287,6 +287,8 @@ alias pe='sudo -Es'
 alias se='sudoedit -E'
 # alias dolog="vim -c ':$ !date \"+\%Y.\%m.\%d.\%H:\%M:\%S\"' /home/nbw/doc/slack.log"
 alias ipt='for c in INPUT FORWARD OUTPUT INSSH; do iptables-save | grep -- "-A $c"| cat -n; printf '-%.0s' {1..80}; echo; done'
+
+alias br='ip -4 -c -br a'
 # Fast ping
 if (( UID == 0 )); then
     local ping_interval=1
