@@ -25,7 +25,7 @@ fi
 
 case ${nodename%%\.*} in
     fe04)
-	keylist=( id_rsa_fe04 id_ed25519 )
+	keylist=( id_rsa_fe04 id_ed25519 id_ecdsa_256 )
         ;;
     vs88)
 	keylist=( id_rsa id_ed25519 )

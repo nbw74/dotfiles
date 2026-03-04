@@ -175,9 +175,9 @@ set scrolloff=999					" Place cursor to the center of a window
 set sidescrolloff=2					" and two columns of context when scrolling
 
 if filereadable(expand("~/.vim/bundle/vim-fugitive/README.markdown"))
-  set statusline=\ %{FugitiveStatusline()}\ %f\ %1*%m%*\ %R%=\'%F\'\ %4l(%p%%):%c\ 0x%2B\ %y\ %{winnr()}\ 
+  set statusline=\ %{FugitiveStatusline()}\ %t\ %1*%m%*\ %R%=%<\'%F\'\ %4l(%p%%):%c\ 0x%2B\ %y\ %{winnr()}\ 
 else
-  set statusline=\ \ %f\ %1*%m%*\ %R%=\'%F\'\ %4l(%p%%):%c\ 0x%2B\ %y,%{&encoding}\ 
+  set statusline=\ \ %t\ %1*%m%*\ %R%=%<\'%F\'\ %4l(%p%%):%c\ 0x%2B\ %y,%{&encoding}\ 
 endif
 
 " AG integration

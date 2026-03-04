@@ -190,8 +190,8 @@ if [[ -f /etc/fedora-release ]]; then
 
     d() {
 	dirs -v | sort -k2
-	bk /tmp/dirs.$UUID
-	dirs > /tmp/dirs.$UUID
+	bk ${HOME}/.local/lib/dirs.$UUID
+	dirs > ${HOME}/.local/lib/dirs.$UUID
     }
 
     rename_func() {
@@ -211,7 +211,7 @@ if [[ -f /etc/fedora-release ]]; then
 
 	rename_func chpwd chpwd_bak
 
-	for dir in $(tac /tmp/dirs.$UUID); do
+	for dir in $(tac ${HOME}/.local/lib/dirs.$UUID); do
 	    eval cd "$dir"
 	done
 
@@ -886,9 +886,10 @@ s() {
     test -n "$_ssh_host" && ssh "$_ssh_host"
 }
 # The next line updates PATH for Yandex Cloud CLI.
-# if [ -f '/home/nbw/yandex-cloud/path.bash.inc' ]; then source '/home/nbw/yandex-cloud/path.bash.inc'; fi
+if [ -f '/home/nbw/yandex-cloud/path.bash.inc' ]; then source '/home/nbw/yandex-cloud/path.bash.inc'; fi
 
 # The next line enables shell command completion for yc.
-# if [ -f '/home/nbw/yandex-cloud/completion.zsh.inc' ]; then source '/home/nbw/yandex-cloud/completion.zsh.inc'; fi
+if [ -f '/home/nbw/yandex-cloud/completion.zsh.inc' ]; then source '/home/nbw/yandex-cloud/completion.zsh.inc'; fi
 
 ## EOF
+
