@@ -812,7 +812,7 @@ Gupdate() {
 }
 
 ovpnlog() {
-    sudo grep CLIENT_LIST $1 | sed 's/\(CLIENT_LIST,\|HEADER,\)//g' | column -s, -t
+    sudo grep CLIENT_LIST $1 | sed 's/\(CLIENT_LIST,\|HEADER,\)//g' | column -s, -t | sort -rk 3
 }
 
 [[ -f "$BC_FILE" ]] && export BC_ENV_ARGS="-ql $BC_FILE"
