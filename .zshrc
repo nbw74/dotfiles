@@ -24,8 +24,6 @@ watch=(notme)                   # watch for everybody but me
 LOGCHECK=300                    # check every 5 min for login/logout activity
 WATCHFMT='%n %a %l from %m at %t.'
 
-export PODMAN_IGNORE_CGROUPSV1_WARNING=true
-
 # TERM
 if [[ $(tty) =~ /dev/tty[0-9]* ]]; then
     export TERM='linux'
@@ -62,8 +60,8 @@ export LC_ALL=en_US.UTF-8
 
 # History options
 HISTFILE=~/.zhistory
-HISTSIZE=20000
-SAVEHIST=20000
+HISTSIZE=120000
+SAVEHIST=120000
 
 if [[ -f "/etc/DIR_COLORS" ]]
 then
@@ -110,19 +108,16 @@ PR_BOLD="%{$bold_color%}"
 PR_UL="%{$underline_color%}"
 PR_RESET="%{$reset_color%}"
 
-if [[ -x "/usr/bin/ccze" ]]
-then
-    CCZE='|ccze -A'
-fi
-
 typeset -i redhat_distribution_major_version=0
 typeset -i debian_distribution_major_version=0
 
-if [[ -r /etc/redhat-release ]]; then
+if [[ -r /etc/redhat-release ]]
+then
     redhat_distribution_major_version=$(awk '{ match($0,"[.0-9]+",a) } END { print int(a[0]) }' /etc/redhat-release)
 fi
 
-if [[ -r /etc/debian_version ]]; then
+if [[ -r /etc/debian_version ]]
+then
     debian_distribution_major_version=$(awk '{ match($0,"[0-9]+"); exit } END { print substr( $0, RSTART, RLENGTH ) }' /etc/debian_version)
 fi
 
@@ -185,7 +180,8 @@ alias j=jobs
 #####
 # DIRS STACK
 #
-if [[ -f /etc/fedora-release ]]; then
+if [[ -f /etc/fedora-release ]]
+then
     UUID=$(uuidgen -mn @dns -N $(hostname -s))
 
     d() {
@@ -285,35 +281,33 @@ alias rmcdir='cd ..; rmdir $OLDPWD || cd $OLDPWD'
 
 alias pe='sudo -Es'
 alias se='sudoedit -E'
-# alias dolog="vim -c ':$ !date \"+\%Y.\%m.\%d.\%H:\%M:\%S\"' /home/nbw/doc/slack.log"
-alias ipt='for c in INPUT FORWARD OUTPUT INSSH; do iptables-save | grep -- "-A $c"| cat -n; printf '-%.0s' {1..80}; echo; done'
 
-alias br='ip -4 -c -br a'
+if (( redhat_distribution_major_version >= 7 )); then
+    alias br='ip -4 -c -br a'
+  else
+    alias br='ip -4 a'
+fi
 # Fast ping
 if (( UID == 0 )); then
     local ping_interval=1
 else
     local ping_interval=2
 fi
-alias ping="LC_ALL=en_US.UTF-8 ping -i0.${ping_interval} -W1 -c5"
+alias p="LC_ALL=C.UTF-8 ping -i0.${ping_interval} -W1 -c5"
 unset ping_interval
 # Global aliases -- These do not have to be at the beginning of the command line.
 alias -g L='|&less'
-alias -g C='|&ccze -A'
 alias -g DN='/dev/null'
 alias -g N='&> /dev/null' # No Output
 alias -g NE='2> /dev/null' # No Errors
 alias -g E='2>&1'
 alias -g HE='2>>( sed -ue "s/.*/$fg_bold[red]&$reset_color/" 1>&2 )' # Highlight Errors
-alias -g T='-t "tmux -u att || (sleep 2 && tmux -u new)"'
+alias -g T='-t "tmux -u att || (sleep 1 && tmux -u new)"'
 alias -g NC='| grep -Pv "(^$|^\s+$|^#|^\s+#|^;)"'
-alias -g P='-t "sudo -Es /usr/local/bin/eos -m passwd -u"'
 alias -g ENC='| bzip2 -9 | base64 -w0'
-alias -g GI='| grep -F Image:'
-alias -g i='grep -F'
-alias -g ii='grep -FIr'
+# cisco-like
+alias -g i='grep -P'
 # Informational aliases
-alias info_openvz='echo -e "* if('''is_running''') {\n\e[1;33m\troot\e[0m;\n} elif('''is_not_running''') {\n\e[1;34m\tprivate\e[0m;\n}"'
 alias info_colors='for i in {0..8} ; do printf "\x1b[0;38;5;${i}mcolour${i}\t\x1b[1;38;5;${i}mcolour${i}\n"; done'
 alias info_pg_is_in_recovery='psql -Upostgres -AXtc "SELECT pg_is_in_recovery()"'
 alias info_pg_replication='[[ $(psql -Upostgres -AXtc "SELECT pg_is_in_recovery()") == "t" ]] && \
@@ -466,7 +460,7 @@ bindkey "^X^E" edit-command-line
 # VCS information
 # http://zsh.sourceforge.net/Doc/Release/User-Contributions.html#Version-Control-Information
 autoload -Uz vcs_info
-zstyle ':vcs_info:*' enable git svn
+zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' get-revision true
 zstyle ':vcs_info:*' unstagedstr "✹"
@@ -535,26 +529,6 @@ zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;32'
 # automatically remove duplicates from these arrays
 typeset -U path cdpath fpath manpath
 
-# Шифрование каталога через openssl со сжатием
-aesg() {
-    tar -cf - "${@}" | gzip - | openssl aes-128-cbc -salt -out ${1}.tar.gz.aes
-}
-# Шифрование каталога через openssl без сжатия
-aes() {
-    tar -cf - "${@}" | openssl aes-128-cbc -salt -out ${1}.tar.aes
-}
-# Шифрование файла через openssl без сжатия
-aesf() {
-    openssl aes-128-cbc -salt -in "${1}" -out ${1}.grb
-}
-# Дешифровка сжатого каталога
-aesgx() {
-    openssl aes-128-cbc -d -salt -in "${1}" | gzip -dc | tar -x -f -
-}
-# Дешифровка несжатого каталога
-aesx() {
-    openssl aes-128-cbc -d -salt -in "${1}" | tar -x -f -
-}
 # Compile SELinux police module (.pp from .te) and load it
 ppmodload() {
     local te=$1
@@ -726,65 +700,6 @@ DEC() {
     echo -n "$2" | base64 -d | bzip2 -dc > "$1"
 }
 
-VMDiskExtendLast() {
-    emulate -L zsh
-
-    local VMName=$1
-    local -a VMDevice
-    local -i VMNewDiskSize=0
-
-    trap return ERR
-
-    VMDevice=( $(virsh qemu-monitor-command $VMName info block --hmp | awk '/file=/ { sub(/:/, ""); sub(/file=/, ""); a=$1; b=$4 } END { print a, b }') )
-    VMNewDiskSize=$(sudo lvdisplay -qq --units b ${VMDevice[2]} | awk '/LV Size/ { print $3 }')
-
-    echo "VM name: $VMName; block: ${VMDevice[1]}; device: ${VMDevice[2]}; size: ${VMNewDiskSize}."
-    virsh qemu-monitor-command $VMName block_resize ${VMDevice[1]} ${VMNewDiskSize}B --hmp
-}
-
-VGExtend() {
-    emulate -L zsh
-
-    if (( EUID )); then
-        echo "You must be supersuser for using this function. Exiting"
-        return 1
-    fi
-
-    local block_device
-    local target_vg
-    local -i lastpart=0
-
-    trap return ERR
-
-    echo pvs:
-    pvs
-    echo vgs:
-    vgs
-    echo lvs:
-    lvs
-    echo disks:
-    ls /dev/[sv]d?
-
-    vared -p 'Enter block device name (format: [sv]d[a-z]): ' -c block_device
-    vared -p 'Enter volume group name (format: [a-z0-9]+): ' -c target_vg
-
-    echo Verify disk:
-    sgdisk /dev/$block_device -v
-    echo Create a new partition:
-    sgdisk /dev/$block_device -b sgdisk-$(date '+%s').gptbak -e -n 0:0:0
-    echo partprobe:
-    partprobe
-    lastpart=$(sgdisk -p /dev/$block_device | awk 'END { print $1 }')
-    echo Change partition\'s type code
-    sgdisk /dev/$block_device -t ${lastpart}:8e00 -c ${lastpart}:"PV $(date '+%F')"
-    echo partprobe:
-    partprobe
-    echo vgextend:
-    vgextend $target_vg /dev/${block_device}$lastpart
-    echo vgs:
-    vgs
-}
-
 _Gcommand() {
     emulate -L zsh
     trap 'return $?' ERR
@@ -813,6 +728,26 @@ Gupdate() {
 
 ovpnlog() {
     sudo grep CLIENT_LIST $1 | sed 's/\(CLIENT_LIST,\|HEADER,\)//g' | column -s, -t | sort -rk 3
+}
+
+rs() {
+    if command -v vtysh >/dev/null
+    then
+	salias vtysh -c "sh ip ospf nei"
+    fi
+    echo -e "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n"
+    if command -v vtysh >/dev/null
+    then
+	chronyc sources
+    fi
+    echo -e "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n"
+    for kvar in \
+	net.ipv4.ip_forward \
+	net.ipv4.conf.all.rp_filter \
+	net.ipv4.conf.default.rp_filter
+    do
+	sysctl $kvar
+    done
 }
 
 [[ -f "$BC_FILE" ]] && export BC_ENV_ARGS="-ql $BC_FILE"

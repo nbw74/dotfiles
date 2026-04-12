@@ -300,10 +300,11 @@ if filereadable(expand("~/venv/ansible/bin/activate"))
   command! YamlPy vert term bash -lc "cat % | python3 -c 'import yaml, json, sys; print(json.dumps(yaml.safe_load(sys.stdin)))' | jq -C"
 
   nmap <F1> :execute<CR>
-  nmap <F3> :term antest.sh -qN<CR>
-  nmap <F4> :term antest.sh -qs<CR>
-  nmap <F5> :vert term antest.sh -q<CR>
-  nmap <F8> :term antest.sh -qR<CR>
+  nmap <F3> :term antest.sh --from-inventory --remove<CR>
+  nmap <F4> :term antest.sh --from-inventory --stop<CR>
+  nmap <F5> :vert term antest.sh --from-inventory<CR>
+  nmap <F7> :vert term antest.sh --from-inventory --teardown --remove<CR>
+  nmap <F8> :term antest.sh --from-inventory --stop --remove<CR>
 endif
 " indentLine
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
