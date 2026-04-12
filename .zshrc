@@ -735,12 +735,12 @@ rs() {
     then
 	sudo vtysh -c "sh ip ospf nei"
     fi
-    echo -e "\n-------------------------------------------------------------------------------\n"
+
     if command -v chronyc >/dev/null
     then
 	chronyc sources
     fi
-    echo -e "\n-------------------------------------------------------------------------------\n"
+    echo
     for kvar in \
 	net.ipv4.ip_forward \
 	net.ipv4.conf.all.rp_filter \
@@ -748,7 +748,7 @@ rs() {
     do
 	sysctl $kvar
     done
-    echo -e "\n-------------------------------------------------------------------------------\n"
+    echo
 }
 
 [[ -f "$BC_FILE" ]] && export BC_ENV_ARGS="-ql $BC_FILE"
