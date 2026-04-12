@@ -733,10 +733,10 @@ ovpnlog() {
 rs() {
     if command -v vtysh >/dev/null
     then
-	salias vtysh -c "sh ip ospf nei"
+	sudo vtysh -c "sh ip ospf nei"
     fi
     echo -e "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n"
-    if command -v vtysh >/dev/null
+    if command -v chronyc >/dev/null
     then
 	chronyc sources
     fi
@@ -748,6 +748,7 @@ rs() {
     do
 	sysctl $kvar
     done
+    echo -e "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n"
 }
 
 [[ -f "$BC_FILE" ]] && export BC_ENV_ARGS="-ql $BC_FILE"
