@@ -222,6 +222,9 @@ menu Hex.ASCII		:%!xxd -r<CR>
 
 " nmap <leader>e		:e ++enc=cp1251<CR>
 " nmap <leader>E		:e ++enc=utf-8<CR>
+nmap <leader>t		:tabnew<CR>
+nmap <leader>0		:tabmove 0<CR>
+nmap <leader>4		:tabmove<CR>
 
 " Paste mode
 nnoremap <leader>p	:set invpaste paste?<CR>
@@ -305,6 +308,8 @@ if filereadable(expand("~/venv/ansible/bin/activate"))
   nmap <F5> :vert term antest.sh --from-inventory<CR>
   nmap <F7> :vert term antest.sh --from-inventory --teardown --remove<CR>
   nmap <F8> :term antest.sh --from-inventory --stop --remove<CR>
+  nmap <F11> :tabprevious<CR>
+  nmap <F12> :tabnext<CR>
 endif
 " indentLine
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
@@ -329,7 +334,7 @@ if has("gui_running")
   set lines=50
   set columns=200
   " set guifont=DejaVu\ Sans\ Mono\ 10
-  set guifont=Fira\ Mono\ 10
+  set guifont=Fira\ Mono\ 11
   set guioptions=acgi
 
   nmap <M-1> 1gt
