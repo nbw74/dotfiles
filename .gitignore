@@ -1,6 +1,7 @@
-.gitconfig
 *.retry
 .config/mc/panels.ini
+.config/mc/ini
+.vim/bundle/neomake
 .vim/.netrwhist
 .vim/doc/tags
 .vim/local

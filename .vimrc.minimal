@@ -175,9 +175,9 @@ set scrolloff=999					" Place cursor to the center of a window
 set sidescrolloff=2					" and two columns of context when scrolling
 
 if filereadable(expand("~/.vim/bundle/vim-fugitive/README.markdown"))
-  set statusline=\ %{FugitiveStatusline()}\ %t\ %1*%m%*\ %R%=%<\'%F\'\ %4l(%p%%):%c\ 0x%2B\ %y\ %{winnr()}\ 
+  set statusline=\ %{FugitiveStatusline()}\ %f\ %1*%m%*\ %R%=\'%F\'\ %4l(%p%%):%c\ 0x%2B\ %y\ %{winnr()}\ 
 else
-  set statusline=\ \ %t\ %1*%m%*\ %R%=%<\'%F\'\ %4l(%p%%):%c\ 0x%2B\ %y,%{&encoding}\ 
+  set statusline=\ \ %f\ %1*%m%*\ %R%=\'%F\'\ %4l(%p%%):%c\ 0x%2B\ %y,%{&encoding}\ 
 endif
 
 " AG integration
@@ -220,11 +220,8 @@ menu Fenc.EOL:mac	:set ff=mac<CR>
 menu Hex.HEX		:%!xxd<CR>
 menu Hex.ASCII		:%!xxd -r<CR>
 
-" nmap <leader>e		:e ++enc=cp1251<CR>
-" nmap <leader>E		:e ++enc=utf-8<CR>
-nmap <leader>t		:tabnew<CR>
-nmap <leader>0		:tabmove 0<CR>
-nmap <leader>4		:tabmove<CR>
+nmap <leader>e		:e ++enc=cp1251<CR>
+nmap <leader>E		:e ++enc=utf-8<CR>
 
 " Paste mode
 nnoremap <leader>p	:set invpaste paste?<CR>
@@ -299,17 +296,11 @@ if filereadable(expand("~/venv/ansible/bin/activate"))
 
   command! -nargs=1 BenderBuild term bash -lc "source $ANSIBLE_VENV_PATH && cd ${HOME}/projects/github/nbw74/antest && ansible-playbook -i inventory/hosts.yml -e flavour=<args> prepare.yml && ansible-bender build build.yml"
 
-  command! YqEval vert term bash -lc "yq eval . %"
-  command! YamlPy vert term bash -lc "cat % | python3 -c 'import yaml, json, sys; print(json.dumps(yaml.safe_load(sys.stdin)))' | jq -C"
-
   nmap <F1> :execute<CR>
-  nmap <F3> :term antest.sh --from-inventory --remove<CR>
-  nmap <F4> :term antest.sh --from-inventory --stop<CR>
-  nmap <F5> :vert term antest.sh --from-inventory<CR>
-  nmap <F7> :vert term antest.sh --from-inventory --teardown --remove<CR>
-  nmap <F8> :term antest.sh --from-inventory --stop --remove<CR>
-  nmap <F11> :tabprevious<CR>
-  nmap <F12> :tabnext<CR>
+  nmap <F3> :term antest.sh -qN<CR>
+  nmap <F4> :term antest.sh -qs<CR>
+  nmap <F5> :vert term antest.sh -q<CR>
+  nmap <F8> :term antest.sh -qR<CR>
 endif
 " indentLine
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
@@ -333,13 +324,8 @@ if has("gui_running")
 
   set lines=50
   set columns=200
-
-  if hostname() == 'ws2.ipbase.tech'
-    set guifont=Nimbus\ Mono\ PS\ 11
-  else
-    set guifont=Fira\ Mono\ 10
-  endif
-
+  " set guifont=DejaVu\ Sans\ Mono\ 10
+  set guifont=Fira\ Mono\ 10
   set guioptions=acgi
 
   nmap <M-1> 1gt
