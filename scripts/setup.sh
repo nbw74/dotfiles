@@ -11,8 +11,22 @@ typeset OPT_ENV_COLOR=""
 # DEFAULTS END
 
 # CONFIGURATION BEGIN
-typeset -a base=( ".gitconfig" ".tmux.conf" ".vim" ".vimrc" ".zlogin" ".zlogout" ".zsh" ".zshrc" )
-typeset -a dirs=( ".vim/tmp" )
+typeset -a base=(
+    ".gitconfig"
+    ".tmux.conf"
+    ".vim"
+    ".vimrc"
+    ".zlogin"
+    ".zlogout"
+    ".zsh"
+    ".zshrc"
+)
+typeset -a ranger=(
+    ".config/ranger/rc.conf"
+    ".config/ranger/rifle.conf"
+    ".config/ranger/scope.sh"
+)
+typeset -a dirs=( ".vim/tmp" ".config/ranger" )
 typeset -a packages=( "zsh" "vim" "tree" "git" )
 typeset -a packages_legacy=( "virt-what" )
 typeset -a packages_modern=( "btop" )
@@ -130,6 +144,12 @@ lnk() {
 
     touch .viminfo
 
+    for d in "${dirs[@]}"; do
+        if [[ ! -d $d ]]; then
+            mkdir -p "$d"
+        fi
+    done
+
     for f in "${base[@]}"; do
         if [[ -f "$f" ]]; then
             if head "$f" | grep -Fqi 'pinned'; then
@@ -151,10 +171,9 @@ lnk() {
         pinned=0
     done
 
-    for d in "${dirs[@]}"; do
-        if [[ ! -d $d ]]; then
-            mkdir -p "$d"
-        fi
+    for f in "${ranger[@]}"; do
+	echo_info_ln "ln -s $f"
+	ln -s "../../.dotfiles/$f" "$f"
     done
 
     cd "$HOME" || false
