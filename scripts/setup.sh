@@ -172,8 +172,10 @@ lnk() {
     done
 
     for f in "${ranger[@]}"; do
-	echo_info_ln "ln -s $f"
-	ln -s "../../.dotfiles/$f" "$f"
+	if [[ ! -h $f ]]; then
+	    echo_info_ln "ln -s $f"
+	    ln -s "../../.dotfiles/$f" "$f"
+	fi
     done
 
     cd "$HOME" || false
