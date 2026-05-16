@@ -18,3 +18,9 @@
 	br = branch
 [core]
 	quotepath = false
+[init]
+	defaultBranch = master
+[http]
+	sslverify = true
+[pull]
+	rebase = true
