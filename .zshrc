@@ -54,6 +54,8 @@ fi
 export EDITOR=vim
 export VISUAL=vim
 export PAGER=less
+export LESS_TERMCAP_so=$'\e[30;103m'
+export LESS_TERMCAP_se=$'\e[0m'
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8

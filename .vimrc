@@ -224,7 +224,7 @@ menu Hex.ASCII		:%!xxd -r<CR>
 " nmap <leader>E		:e ++enc=utf-8<CR>
 nmap <leader>t		:tabnew<CR>
 nmap <leader>0		:tabmove 0<CR>
-nmap <leader>4		:tabmove<CR>
+nmap <leader>$		:tabmove<CR>
 
 " Paste mode
 nnoremap <leader>p	:set invpaste paste?<CR>
@@ -256,6 +256,9 @@ nmap <leader>l		:llast<CR>
 nnoremap <leader>m	:<C-u>marks<CR>:normal!<Space>'
 nnoremap <leader>a	:ls<CR>:b<Space>
 nnoremap <leader>z	:undolist<CR>:u<Space>
+
+nmap <F11> :tabprevious<CR>
+nmap <F12> :tabnext<CR>
 
 " vim-fugitive "addon"
 if filereadable(expand("~/.vim/bundle/vim-fugitive/README.markdown"))
@@ -308,8 +311,6 @@ if filereadable(expand("~/venv/ansible/bin/activate"))
   nmap <F5> :vert term antest.sh --from-inventory<CR>
   nmap <F7> :vert term antest.sh --from-inventory --teardown --remove<CR>
   nmap <F8> :term antest.sh --from-inventory --stop --remove<CR>
-  nmap <F11> :tabprevious<CR>
-  nmap <F12> :tabnext<CR>
 endif
 " indentLine
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
@@ -337,7 +338,7 @@ if has("gui_running")
   if hostname() == 'ws2.ipbase.tech'
     set guifont=Nimbus\ Mono\ PS\ 11
   else
-    set guifont=Fira\ Mono\ 10
+    set guifont=Fira\ Code\ 11
   endif
 
   set guioptions=acgi
