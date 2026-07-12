@@ -338,7 +338,7 @@ if has("gui_running")
   if hostname() == 'ws2.ipbase.tech'
     set guifont=Nimbus\ Mono\ PS\ 11
   else
-    set guifont=Fira\ Code\ 11
+    set guifont=Fira\ Code\ 10
   endif
 
   set guioptions=acgi
