@@ -184,6 +184,8 @@ endif
 if filereadable("/usr/bin/ag")
   set grepprg=ag\ --case-sensitive\ --vimgrep\ $*
   set grepformat=%f:%l:%c:%m
+
+  command! -nargs=+ -complete=file Ag silent grep! <args> | copen
 endif
 
 set laststatus=2					" строка статуса всегда видима

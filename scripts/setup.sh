@@ -144,13 +144,6 @@ lnk() {
 
     touch .viminfo
 
-    for d in "${dirs[@]}"; do
-        if [[ ! -d $d ]]; then
-            echo_info_d "mkdir -p $d"
-            mkdir -p "$d"
-        fi
-    done
-
     for f in "${base[@]}"; do
         if [[ -f "$f" ]]; then
             if head "$f" | grep -Fqi 'pinned'; then
@@ -170,6 +163,13 @@ lnk() {
         fi
 
         pinned=0
+    done
+
+    for d in "${dirs[@]}"; do
+        if [[ ! -d $d ]]; then
+            echo_info_d "mkdir -p $d"
+            mkdir -p "$d"
+        fi
     done
 
     for f in "${ranger[@]}"; do
