@@ -670,66 +670,42 @@ __install_missing() {
 certinfo() {
 
     if [[ -z $1 ]] ; then
-        printf 'usage: certinfo_full <certifate file>\n'
+        printf '  Usage: certinfo_full <certifate file>\n'
         return 1
     fi
 
     __install_missing gnutls-utils
 
-    certtool -i < $1 | grep --color=never -E "(ate Information:|Subject:|Issuer:|Not Before:|Not After:|DNS:|CN=|^$)"
+    certtool -i < "$1" | grep --color=never -E "(ate Information:|Subject:|Issuer:|Not Before:|Not After:|DNS:|CN=|^$)"
 }
 
 certinfo_full() {
 
     if [[ -z $1 ]] ; then
-        printf 'usage: certinfo_full <certifate file>\n'
+        printf '  Usage: certinfo_full <certifate file>\n'
         return 1
     fi
 
     __install_missing gnutls-utils
 
-    certtool -i < $1
+    certtool -i < "$1"
 }
 
 certinfo_web() {
 
     if [[ -z $1 ]] ; then
-        printf 'usage: certinfo_web <domain.tld>\n'
+        printf '  Usage: certinfo_web <domain.tld>\n'
         return 1
     fi
 
-    echo | openssl s_client -servername $1 -connect $1:443 2>/dev/null | openssl x509 -noout -issuer -subject -dates
+    __install_missing openssl
+
+    openssl s_client -servername $1 -connect $1:443 </dev/null 2>/dev/null | openssl x509 -noout -issuer -subject -dates
 }
 
 # 'DEC' function -- see also 'alias -g ENC'
 DEC() {
     echo -n "$2" | base64 -d | bzip2 -dc > "$1"
-}
-
-_Gcommand() {
-    emulate -L zsh
-    trap 'return $?' ERR
-
-    local GIT_MARK=""
-
-    GIT_MARK="${BR_MAGENTA}[${YELLOW}*${BR_MAGENTA}]${GREEN} "
-    echo "${GIT_MARK}${*}$CRESET"
-    $*
-}
-
-Gupdate() {
-    emulate -L zsh
-    trap return ERR
-
-    if [[ -z $1 ]]; then
-	echo "Usage: $0 <existing_git_branch>"
-	false
-    fi
-
-    _Gcommand git checkout master && \
-    _Gcommand git pull origin master && \
-    _Gcommand git checkout $1 && \
-    _Gcommand git rebase master
 }
 
 ovpnlog() {
