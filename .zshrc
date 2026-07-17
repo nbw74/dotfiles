@@ -652,48 +652,52 @@ src() {
     [[ -f "~/.zcompdump.zwc.old" ]] && rm -fv ~/.zcompdump.zwc.old;
     source ~/.zshrc;
 }
-#g#
-ssl_hashes=( sha512 sha256 sha1 md5 )
-#g#
-for sh in ${ssl_hashes}; do
-    eval 'ssl-cert-'${sh}'() {
-        emulate -L zsh
-        if [[ -z $1 ]] ; then
-            printf '\''usage: %s <file>\n'\'' "ssh-cert-'${sh}'"
-            return 1
-        fi
-        openssl x509 -noout -fingerprint -'${sh}' -in $1
-    }'
-done; unset sh
-#g#
-ssl-cert-fingerprints() {
-    emulate -L zsh
-    local i
-    if [[ -z $1 ]] ; then
-        printf 'usage: ssl-cert-fingerprints <file>\n'
-        return 1
+
+__install_missing() {
+
+    if ! rpm -q "$1" >/dev/null
+    then
+	if (( redhat_distribution_major_version <= 7 ))
+	then
+	    yum install "$1"
+	elif (( redhat_distribution_major_version >= 8 ))
+	then
+	    dnf install "$1"
+	fi
     fi
-    for item in ${ssl_hashes}
-        do ssl-cert-$item $1;
-    done
 }
-#g#
-ssl-cert-info() {
-    emulate -L zsh
+
+certinfo() {
+
     if [[ -z $1 ]] ; then
-        printf 'usage: ssl-cert-info <file>\n'
+        printf 'usage: certinfo_full <certifate file>\n'
         return 1
     fi
-    openssl x509 -noout -text -in $1
-    ssl-cert-fingerprints $1
+
+    __install_missing gnutls-utils
+
+    certtool -i < $1 | grep --color=never -E "(ate Information:|Subject:|Issuer:|Not Before:|Not After:|DNS:|CN=|^$)"
 }
-#
-ssl-web-info() {
-    emulate -L zsh
+
+certinfo_full() {
+
     if [[ -z $1 ]] ; then
-        printf 'usage: ssl-web-info <file>\n'
+        printf 'usage: certinfo_full <certifate file>\n'
         return 1
     fi
+
+    __install_missing gnutls-utils
+
+    certtool -i < $1
+}
+
+certinfo_web() {
+
+    if [[ -z $1 ]] ; then
+        printf 'usage: certinfo_web <domain.tld>\n'
+        return 1
+    fi
+
     echo | openssl s_client -servername $1 -connect $1:443 2>/dev/null | openssl x509 -noout -issuer -subject -dates
 }
 
