@@ -37,7 +37,18 @@ if has("autocmd")
   filetype plugin indent on
   set omnifunc=syntaxcomplete#Complete
 
-  if filereadable(expand("~/.vim/bundle/supertab/README.rst"))
+  " Detect RHEL-based OS version
+  let s:rhel_version = 0
+  if filereadable('/etc/os-release')
+    for line in readfile('/etc/os-release')
+      if line =~# '^VERSION_ID='
+	let s:rhel_version = str2nr(matchstr(line, '\d\+'))
+	break
+      endif
+    endfor
+  endif
+
+  if s:rhel_version >= 9 && filereadable(expand("~/.vim/bundle/supertab/README.rst"))
     autocmd FileType *
       \ if &omnifunc != '' |
       \   call SuperTabChain(&omnifunc, "<c-p>") |
