@@ -676,7 +676,7 @@ certinfo() {
 
     __install_missing gnutls-utils
 
-    certtool -i < "$1" | grep --color=never -E "(ate Information:|Subject:|Issuer:|Not Before:|Not After:|DNS:|CN=|^$)"
+    certtool -i < "$1" | grep --color=never -E "(ate Information:|Subject:|Issuer:|Not Before:|Not After:|DNS:|DNSname:|CN=|^$)"
 }
 
 certinfo_full() {
