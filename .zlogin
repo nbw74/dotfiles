@@ -46,7 +46,8 @@ _copy_kube_config() {
 _copy_yc_config() {
     sudo cp -r /root/yandex-cloud ~/. ;
     sudo cp -r /root/.config/yandex-cloud ~/.config/. ;
-    sudo chown `whoami`:`whoami` ~/yandex-cloud ~/.config/yandex-cloud ;
+    sudo chown -R `whoami`:`whoami` ~/yandex-cloud ~/.config/yandex-cloud ;
+    sed -ri 's#/root#..#' ~/.kube/config ;
 }
 
 case "$fqdnhash" in
