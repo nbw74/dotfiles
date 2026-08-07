@@ -14,7 +14,7 @@ fi
 [[ -x /usr/local/go/bin/go ]] && export PATH=$PATH:/usr/local/go/bin
 
 local nodename=$(hostname -s)
-local fqdnhash=$(hostname -f | md5sum)
+local fqdnhash=$(hostname -f | md5sum | tr -d '[:space:],-')
 local -i keyrun=0
 local -a keylist
 
