@@ -36,7 +36,8 @@ case ${nodename%%\.*} in
 esac
 
 _copy_kube_config() {
-    mkdir -m 0700 ~/.kube ;
+    mkdir -p ~/.kube ;
+    chmod 0700 ~/.kube ;
     touch ~/.kube/config ;
     chmod 0600 ~/.kube/config ;
     sudo cat /root/.kube/config > ~/.kube/config ;
