@@ -804,10 +804,15 @@ s() {
     test -n "$_ssh_host" && ssh "$_ssh_host"
 }
 # The next line updates PATH for Yandex Cloud CLI.
-if [ -f '/home/nbw/yandex-cloud/path.bash.inc' ]; then source '/home/nbw/yandex-cloud/path.bash.inc'; fi
+if [[ -f "${HOME}/yandex-cloud/path.bash.inc" ]]
+then
+    PATH="${HOME}/yandex-cloud/bin:$PATH"
+fi
 
 # The next line enables shell command completion for yc.
-if [ -f '/home/nbw/yandex-cloud/completion.zsh.inc' ]; then source '/home/nbw/yandex-cloud/completion.zsh.inc'; fi
+if [[ -f "${HOME}/yandex-cloud/completion.zsh.inc" ]]
+then
+    source "${HOME}/yandex-cloud/completion.zsh.inc"
+fi
 
 ## EOF
-
