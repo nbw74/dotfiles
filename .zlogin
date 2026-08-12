@@ -51,14 +51,11 @@ _copy_yc_config() {
 }
 
 case "$fqdnhash" in
-    182e373d2ba7ac910d4bc0ec39852e8b)
+    182e373d2ba7ac910d4bc0ec39852e8b|0a96db6b75ed6232d3803d1f85ee4af9)
 	_copy_kube_config ;
 	_copy_yc_config
 	;;
-    3c1e18eb0fa554a1edcda50b5e28e53d)
-	_copy_kube_config
-	;;
-    a4c1a5ceca5c4ddd9128bc571ee260aa)
+    3c1e18eb0fa554a1edcda50b5e28e53d|a4c1a5ceca5c4ddd9128bc571ee260aa)
 	_copy_kube_config
 	;;
     *)
