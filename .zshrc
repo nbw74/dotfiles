@@ -230,9 +230,8 @@ alias ...='cd ../../'
 alias ....='cd ../../../'
 # git
 alias gcm='git commit -m'
-alias gco='git checkout'
-alias gds='git --no-pager diff --color --staged'
-alias gdw='git --no-pager diff --color'
+alias gds='git diff --color --staged'
+alias gdw='git diff --color'
 alias gpl='git pull'
 alias gps='git push'
 alias gst='git status'
@@ -256,7 +255,6 @@ elif (( redhat_distribution_major_version > 0 )); then
     salias ylin="yum localinstall --nogpgcheck"
     salias ye="yum erase"
     salias up="yum upgrade"
-    salias ups="yum --security upgrade"
 fi
 #
 local -i a=0
@@ -275,7 +273,7 @@ fi
 alias ls="ls -C --color=always --classify --size -k --human-readable $lsgdf"
 unset lsgdf
 # ls -l с цифровым видом прав
-alias lsd="ls -l | sed -e 's/--x/1/g' -e 's/-w-/2/g' -e 's/-wx/3/g' -e 's/r--/4/g'  -e 's/r-x/5/g' -e 's/rw-/6/g' -e 's/rwx/7/g' -e 's/---/0/g'"
+alias lsd="ls -lhn | sed -e 's/--x/1/g' -e 's/-w-/2/g' -e 's/-wx/3/g' -e 's/r--/4/g'  -e 's/r-x/5/g' -e 's/rw-/6/g' -e 's/rwx/7/g' -e 's/---/0/g'"
 alias tree='tree -FqC'
 alias df='df -PTh -x tmpfs -x devtmpfs -x efivarfs'
 #g#a2# Remove current empty directory. Execute \kbd{cd ..; rmdir \$OLDCWD}
@@ -310,7 +308,6 @@ alias -g ENC='| bzip2 -9 | base64 -w0'
 # cisco-like
 alias -g i='grep -P'
 # Informational aliases
-alias info_colors='for i in {0..8} ; do printf "\x1b[0;38;5;${i}mcolour${i}\t\x1b[1;38;5;${i}mcolour${i}\n"; done'
 alias info_pg_is_in_recovery='psql -Upostgres -AXtc "SELECT pg_is_in_recovery()"'
 alias info_pg_replication='[[ $(psql -Upostgres -AXtc "SELECT pg_is_in_recovery()") == "t" ]] && \
     psql -Upostgres -Xc "SELECT now() - pg_last_xact_replay_timestamp() AS write_or_replication_delay" || \

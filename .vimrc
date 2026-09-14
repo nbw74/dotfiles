@@ -339,10 +339,10 @@ if has("gui_running")
   set lines=50
   set columns=200
 
-  if hostname() == 'ws2.ipbase.tech'
-    set guifont=Nimbus\ Mono\ PS\ 11
+  if hostname() =~ '^ws2\.'
+    set guifont=nimbus\ mono\ ps\ 10
   else
-    set guifont=Fira\ Code\ 10
+    set guifont=fira\ code\ 10
   endif
 
   set guioptions=acgi
