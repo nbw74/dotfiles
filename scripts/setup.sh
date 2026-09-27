@@ -12,7 +12,6 @@ typeset OPT_ENV_COLOR=""
 
 # CONFIGURATION BEGIN
 typeset -a base=(
-    ".gitconfig"
     ".tmux.conf"
     ".vim"
     ".vimrc"

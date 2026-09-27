@@ -1,6 +1,7 @@
 *.retry
 .config/mc/panels.ini
 .config/mc/ini
+.gitconfig
 .vim/bundle/neomake
 .vim/.netrwhist
 .vim/doc/tags
