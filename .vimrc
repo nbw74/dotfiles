@@ -49,6 +49,20 @@ if has("autocmd")
     endif
   endif
 
+  if filereadable(expand("~/.vim/bundle/vim-ai/README.md"))
+    if v:version >= 900
+      let g:vim_ai_roles_config_file = '~/projects/fe04/local/vim-ai-addons/roles.ini'
+
+      nnoremap <leader>g	:AI /gcm<CR>
+      inoremap <leader>g	:AI /gcm<CR>
+      nnoremap <leader>gb	:AI /gcmb<CR>
+      inoremap <leader>gb	:AI /gcmb<CR>
+      nnoremap <leader>gr	:AI /gcmr<CR>
+      inoremap <leader>gr	:AI /gcmr<CR>
+      nnoremap <leader>grb	:AI /gcmrb<CR>
+      inoremap <leader>grb	:AI /gcmrb<CR>
+    endif
+  endif
 
   if filereadable(expand("~/.vim/bundle/commentary/plugin/commentary.vim"))
     autocmd FileType jinja2 setlocal commentstring=#\ %s
