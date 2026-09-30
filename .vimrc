@@ -61,6 +61,8 @@ if has("autocmd")
       inoremap <leader>gr	:AI /gcmr<CR>
       nnoremap <leader>grb	:AI /gcmrb<CR>
       inoremap <leader>grb	:AI /gcmrb<CR>
+      nnoremap <leader>s	:AIStopChat<CR>
+      inoremap <leader>s	:AIStopChat<CR>
     endif
   endif
 
