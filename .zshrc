@@ -730,6 +730,30 @@ rs() {
     echo
 }
 
+kunode() {
+  local KUNODE="${1:?Usage: kunode <node-name>}"
+
+  kubectl run node-shell \
+    --image=alpine \
+    --restart=Never \
+    --overrides="{
+      \"spec\": {
+        \"nodeName\": \"${KUNODE}\",
+        \"hostPID\": true,
+        \"hostNetwork\": true,
+        \"containers\": [{
+          \"name\": \"node-shell\",
+          \"image\": \"alpine\",
+          \"command\": [\"nsenter\", \"-t\", \"1\", \"-m\", \"-u\", \"-i\", \"-n\", \"sh\"],
+          \"stdin\": true,
+          \"tty\": true,
+          \"securityContext\": {\"privileged\": true}
+        }]
+      }
+    }" \
+    -it --rm
+}
+
 [[ -f "$BC_FILE" ]] && export BC_ENV_ARGS="-ql $BC_FILE"
 export LESS='-iMR -j5'
 export GREP_COLORS='mt=1;32'
